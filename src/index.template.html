@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= htmlWebpackPlugin.options.productName %>
+  </title>
+  <meta charset="utf-8">
+  <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width<% if (htmlWebpackPlugin.options.ctx.mode.cordova) { %>, viewport-fit=cover<% } %>">
+  <link rel="icon" href="statics/quasar-logo.png" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="statics/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="statics/icons/favicon-16x16.png">
+  <link rel="stylesheet" href="statics/css/codemirror.css" />
+  <link rel="stylesheet" href="statics/css/idea.css" />
+  <link rel="stylesheet" href="statics/css/foldgutter.css" />
+  <link rel="stylesheet" href="statics/css/show-hint.css" />
+  <script src="statics/lib/codemirror/codemirror.js"></script>
+  <script src="statics/lib/codemirror/mode/overlay.js"></script>
+  <script src="statics/lib/codemirror/mode/simple.js"></script>
+  <script src="statics/lib/codemirror/plugin/selection-pointer.js"></script>
+  <script src="statics/lib/codemirror/plugin/matchbrackets.js"></script>
+  <script src="statics/lib/codemirror/mode/pug.js"></script>
+  <script src="statics/lib/codemirror/mode/xml.js"></script>
+  <script src="statics/lib/codemirror/mode/javascript.js"></script>
+  <script src="statics/lib/codemirror/mode/css.js"></script>
+  <script src="statics/lib/codemirror/mode/htmlmixed.js"></script>
+  <script src="statics/lib/codemirror/mode/vue.js"></script>
+  <script src="statics/lib/codemirror/fold/foldcode.js"></script>
+  <script src="statics/lib/codemirror/fold/foldgutter.js"></script>
+  <script src="statics/lib/codemirror/fold/brace-fold.js"></script>
+  <script src="statics/lib/codemirror/fold/comment-fold.js"></script>
+  <script src="statics/lib/codemirror/hint/show-hint.js"></script>
+  <script src="statics/lib/codemirror/hint/javascript-hint.js"></script>
+  <script src="statics/lib/codemirror/hint/css-hint.js"></script>
+</head>
+
+<body>
+  <!-- DO NOT touch the following DIV -->
+  <div id="q-app"></div>
+</body>
+
+</html>
