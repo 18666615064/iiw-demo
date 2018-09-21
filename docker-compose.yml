@@ -1,0 +1,11 @@
+version: '3.2'
+services:
+  iiw-demo:
+    image: registry.cn-shenzhen.aliyuncs.com/iotimc-cxj/iiw-demo:latest
+    deploy:
+      mode: global
+    networks:
+      - iiw2
+networks:
+  iiw2:
+    external: true
