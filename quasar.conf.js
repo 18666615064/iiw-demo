@@ -38,8 +38,8 @@ module.exports = function(ctx) {
     },
     devServer: {
       // https: true,
-      host: '192.168.20.236',
-      port: 8080,
+      // host: '192.168.20.236',
+      // port: 8080,
       open: false, // opens browser window automatically
       proxy: {
         // 将所有以/api开头的请求代理到jsonplaceholder
