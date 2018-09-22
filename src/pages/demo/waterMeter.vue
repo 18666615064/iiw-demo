@@ -184,8 +184,7 @@ export default {
     this.getInfoList()
     this.wsMonitor(this.$route.params.imei)
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     onReady(instance, CountUp) {
       // const that = this
@@ -244,8 +243,16 @@ export default {
           fill: '#8659AF'
         }
       })
-      chart.line().position('time*tem').shape('smooth').color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
-      chart.area().position('time*tem').shape('smooth').color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
+      chart
+        .line()
+        .position('time*tem')
+        .shape('smooth')
+        .color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
+      chart
+        .area()
+        .position('time*tem')
+        .shape('smooth')
+        .color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
       chart.render()
       // // Step 2: 载入数据源
       // chart.source(this.data)
@@ -305,25 +312,27 @@ export default {
         name: 'water_load',
         size: 24
       }
-      getInfoList(query).then(res => {
-        let data = res.data
-        data.forEach((item, i) => {
-          if (i === 0) {
-            item.endVal = 0
-            item.allVal = item.value
-            this.theMonth = item
-          }
+      getInfoList(query)
+        .then(res => {
+          let data = res.data
+          data.forEach((item, i) => {
+            if (i === 0) {
+              item.endVal = 0
+              item.allVal = item.value
+              this.theMonth = item
+            }
+          })
+          this.InfoList = data
+          console.log(this.InfoList, 'InfoList')
+          this.getMInfoList() // 获取历史月份数据
         })
-        this.InfoList = data
-        console.log(this.InfoList, 'InfoList')
-        this.getMInfoList() // 获取历史月份数据
-      }).catch(error => {
-        this.$q.notify({
-          message: error.message,
-          type: 'negative',
-          position: 'top-left'
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            type: 'negative',
+            position: 'top-left'
+          })
         })
-      })
     },
     getMInfoList() {
       let query = {
@@ -331,31 +340,33 @@ export default {
         name: 'water_load',
         size: 10
       }
-      getMInfoList(query).then(res => {
-        console.log(res, 'getMInfoListgetMInfoList')
-        let data = res.data
-        this.chartData = []
-        data.forEach((item, i) => {
-          if (i === 0) {
-            console.log(parseInt(this.theMonth.value), parseInt(item.value), 'parseInt(this.theMonth.value) - parseInt(item.value)')
-            this.theMonth.endVal = parseInt(this.theMonth.value) - parseInt(item.value)
-            this.theMoney.endVal = this.Moneytransform(this.theMonth.endVal)
-          }
-          let json = {}
-          let time = new Date(item.cretime)
-          json.time = `${time.getMonth()}月`
-          json.tem = item.value
-          this.chartData.push(json)
+      getMInfoList(query)
+        .then(res => {
+          console.log(res, 'getMInfoListgetMInfoList')
+          let data = res.data
+          this.chartData = []
+          data.forEach((item, i) => {
+            if (i === 0) {
+              console.log(parseInt(this.theMonth.value), parseInt(item.value), 'parseInt(this.theMonth.value) - parseInt(item.value)')
+              this.theMonth.endVal = parseInt(this.theMonth.value) - parseInt(item.value)
+              this.theMoney.endVal = this.Moneytransform(this.theMonth.endVal)
+            }
+            let json = {}
+            let time = new Date(item.cretime)
+            json.time = `${time.getMonth()}月`
+            json.tem = item.value
+            this.chartData.push(json)
+          })
+          this.chartData.reverse()
+          this._initChat()
         })
-        this.chartData.reverse()
-        this._initChat()
-      }).catch(error => {
-        this.$q.notify({
-          message: error.message,
-          type: 'negative',
-          position: 'top-left'
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            type: 'negative',
+            position: 'top-left'
+          })
         })
-      })
     },
     // 第一阶梯 26m³以下 1.98 ; 27m³-34m³之间 2.97 ; 34m³以上 3.96
     Moneytransform(tem) {
@@ -375,8 +386,8 @@ export default {
     },
     wsMonitor(imei) {
       // var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
-      var es = new EventSource(`/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
-      es.addEventListener('dataLog', (e) => {
+      var es = new EventSource(`/admin/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
+      es.addEventListener('dataLog', e => {
         console.log(e, 'addEventListener')
         this.getInfoList()
         this.getMInfoList()
@@ -387,71 +398,71 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .iCountUp {
-    font-size: 12em;
-    margin: 0;
-    color: #4d63bc;
+.iCountUp {
+  font-size: 12em;
+  margin: 0;
+  color: #4d63bc;
+}
+.water-lint {
+  i {
+    font-size: 30px;
   }
-  .water-lint {
-    i {
-      font-size: 30px;
-    }
+}
+.water-parameter {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 14px;
+  margin-bottom: 20px;
+  span {
+    padding-left: 15px;
+    color: #757575;
   }
-  .water-parameter {
-    display: inline-block;
-    font-size: 14px;
-    line-height: 14px;
-    margin-bottom: 20px;
-    span {
-      padding-left: 15px;
-      color: #757575
-    }
-  }
-  .waterParameter-box {
-    position: relative;
-    // padding-left: 10px;
-    height: 70px;
-    line-height: 70px;
-    font-size: 24px;
-    .waterParameter-box_unit {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 20px;
-      line-height: 20px;
-      font-size: 12px;
-      .iconfont {
-        padding-left: 3px;
-        font-size: 13px;
-      }
-    }
-    .waterParameter-box_unitSpan {
-      padding-left: 5px;
-      font-size: 12px;
-    }
-  }
-  .chart {
-    position: relative;
-    .chart-span {
-      position: absolute;
-      top: -10px;
-      left: 17px;
-      color: #757575;
-      font-size: 12px;
-    }
-  }
-  .lookBox {
-    padding: 0 20px;
+}
+.waterParameter-box {
+  position: relative;
+  // padding-left: 10px;
+  height: 70px;
+  line-height: 70px;
+  font-size: 24px;
+  .waterParameter-box_unit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    line-height: 20px;
     font-size: 12px;
-    padding-bottom: 20px;
-    line-height: 24px;
+    .iconfont {
+      padding-left: 3px;
+      font-size: 13px;
+    }
   }
+  .waterParameter-box_unitSpan {
+    padding-left: 5px;
+    font-size: 12px;
+  }
+}
+.chart {
+  position: relative;
+  .chart-span {
+    position: absolute;
+    top: -10px;
+    left: 17px;
+    color: #757575;
+    font-size: 12px;
+  }
+}
+.lookBox {
+  padding: 0 20px;
+  font-size: 12px;
+  padding-bottom: 20px;
+  line-height: 24px;
+}
 </style>
 
 <style lang="less">
-  .water-lint {
-    .q-item-label {
-      line-height: 2.0;
-    }
+.water-lint {
+  .q-item-label {
+    line-height: 2;
   }
+}
 </style>
