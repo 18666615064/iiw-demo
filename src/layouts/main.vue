@@ -64,7 +64,9 @@ export default {
       this.$router.push({ name: 'waterMeter' })
     },
     test() {
-      this.$router.push({ path: '/test' })
+      // this.$router.push({ path: '/test' })
+      // this.$router.push({ name: 'waterMeter' })
+      this.$router.push({ path: '/loading/869664030006491' })
     }
   }
 }

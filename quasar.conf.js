@@ -38,23 +38,11 @@ module.exports = function(ctx) {
     },
     devServer: {
       // https: true,
-      // host: '192.168.20.236',
-      // port: 8080,
-      open: false, // opens browser window automatically
-      proxy: {
-        // 将所有以/api开头的请求代理到jsonplaceholder
-        '/server': {
-          target: 'http://1u5517x920.imwork.net:12028',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/server': ''
-          }
-        }
-      }
+      open: false
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
-      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile'],
+      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction'],
       directives: ['Ripple'],
       // Quasar plugins
       plugins: ['Notify', 'Dialog'],

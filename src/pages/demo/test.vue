@@ -1,64 +1,27 @@
 <template>
-  <div class="testBox">
-    <q-card inline>
-      <q-card-media>
-        <img src="../../assets/images/waterMeter.jpg">
-      </q-card-media>
-      <q-card-title>
-        Cafe Basilico
-        <q-rating slot="subtitle" v-model="stars" :max="5" />
-        <div slot="right" class="row items-center">
-          <q-icon name="place" /> 250 ft
+  <!-- <div class="testBox">
+    <q-spinner />
+    <q-spinner-gears color="primary" :size="30" />
+    <div class="container">
+      <div class="wave ripple danger">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="content">
+          <i class="fa fa-bell"></i>
         </div>
-      </q-card-title>
-      <q-card-main>
-        <p>$・Italian, Cafe</p>
-        <p class="text-faded">Small plates, salads & sandwiches in an intimate setting.</p>
-      </q-card-main>
-      <q-card-separator />
-      <q-card-actions>
-        <q-btn flat round dense icon="event" />
-        <q-btn flat label="5:30PM" />
-        <q-btn flat label="7:30PM" />
-        <q-btn flat label="9:00PM" />
-        <q-btn flat color="primary" label="Reserve" />
-      </q-card-actions>
-    </q-card>
-    <q-card>
-      <q-card-actions>
-        <q-btn flat round dense icon="fingerprint" />
-        <q-btn flat label="5:30PM" />
-        <q-btn flat label="7:30PM" />
-        <q-btn flat label="9:00PM" />
-        <q-btn flat color="primary" label="Reserve" />
-      </q-card-actions>
-    </q-card>
-    <q-card>
-      <q-card-actions>
-        <q-btn flat round dense icon="fingerprint" />
-        <q-btn flat label="5:30PM" />
-        <q-btn flat label="7:30PM" />
-        <q-btn flat label="9:00PM" />
-        <q-btn flat color="primary" label="Reserve" />
-      </q-card-actions>
-    </q-card>
-    <q-card>
-      <q-card-actions>
-        <q-btn flat round dense icon="fingerprint" />
-        <q-btn flat label="5:30PM" />
-        <q-btn flat label="7:30PM" />
-        <q-btn flat label="9:00PM" />
-        <q-btn flat color="primary" label="Reserve" />
-      </q-card-actions>
-    </q-card>
-    <ICountUp
-      :startVal="startVal"
-      :endVal="endVal"
-      :decimals="decimals"
-      :duration="duration"
-      :options="options"
-      @ready="onReady"
-    />
+      </div>
+      <div class="spliter"></div>
+      <div class="wave solid warning">
+        <div class="circle"></div>
+        <div class="content">
+          <i class="fa fa-bell"></i>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div>
+    123
   </div>
 </template>
 
@@ -83,7 +46,9 @@ export default {
         decimal: '.',
         prefix: '',
         suffix: ''
-      }
+      },
+      showSimulatedReturnData: false,
+      visible: true
     }
   },
   methods: {
@@ -95,17 +60,102 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-  .testBox {
-    margin: 10px;
-    // border: 1px solid #000;
-    .q-card {
-      margin-bottom: 10px;
-    }
+<style lang='less' scoped>
+.testBox {
+  margin: 10px;
+  // border: 1px solid #000;
+  .q-card {
+    margin-bottom: 10px;
   }
-  .iCountUp {
-    font-size: 12em;
-    margin: 0;
-    color: #4d63bc;
+}
+.iCountUp {
+  font-size: 12em;
+  margin: 0;
+  color: #4d63bc;
+}
+.container {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  width: 40%;
+  height: 40%;
+}
+.spliter {
+  width: 100%;
+  height: 20px;
+}
+/************以下为具体实现************/
+.wave {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  font-size: 28px;
+}
+.wave .circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+}
+/* 波纹效果 */
+.wave.ripple .circle {
+  width: calc(100% - 6px); /* 减去边框的大小 */
+  height: calc(100% - 6px); /* 减去边框的大小 */
+  border: 3px solid #fff;
+}
+.wave.ripple .circle:first-child {
+  animation: circle-opacity 2s infinite;
+}
+.wave.ripple .circle:nth-child(2) {
+  animation: circle-opacity 2s infinite;
+  animation-delay: 0.3s;
+}
+.wave.ripple .circle:nth-child(3) {
+  animation: circle-opacity 2s infinite;
+  animation-delay: 0.6s;
+}
+.wave.ripple.danger {
+  color: red;
+}
+.wave.ripple.danger .circle {
+  border-color: red;
+}
+.wave.ripple.warning {
+  color: orange;
+}
+.wave.ripple.warning .circle {
+  border-color: orange;
+}
+/* 波动效果 */
+.wave.solid .circle {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+.wave.solid .circle:first-child {
+  animation: circle-opacity 2s infinite;
+}
+.wave.solid.danger {
+  color: red;
+}
+.wave.solid.danger .circle {
+  background: red;
+}
+.wave.solid.warning {
+  color: orange;
+}
+.wave.solid.warning .circle {
+  background: orange;
+}
+@keyframes circle-opacity {
+  from {
+    opacity: 1;
+    transform: scale(0);
   }
+  to {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
 </style>

@@ -6,3 +6,21 @@ export function getInfoImei(url) {
     method: 'get'
   })
 }
+
+export function getInfoList(query) {
+  return request({
+    url: '/devicecenter/sensor/top',
+    // url: '/sensor/top',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getMInfoList(query) {
+  return request({
+    url: '/devicecenter/sensor/last',
+    // url: '/sensor/last',
+    method: 'get',
+    params: query
+  })
+}

@@ -12,7 +12,6 @@ const service = axios.create({
     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
   }
 })
-console.log(service, 'serviceserviceserviceservice')
 // request interceptor
 service.interceptors.request.use(config => {
   // Do something before request is sent
