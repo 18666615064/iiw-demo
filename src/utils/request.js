@@ -4,10 +4,9 @@ import axios from 'axios'
 import qs from 'qs'
 // create an axios instance
 const service = axios.create({
-  baseURL: '/admin/devicecenter', // api的base_url
-  //baseURL: 'http://api.iotdev.top/admin/devicecenter',
-  timeout: 5000, // request timeout
-  withCredentials: false, // 是否允许带cookie这些
+  baseURL: '/admin/devicecenter',
+  timeout: 5000,
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
   }
