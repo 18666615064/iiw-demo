@@ -184,7 +184,9 @@ export default {
     this.getInfoList()
     this.wsMonitor(this.$route.params.imei)
   },
-  mounted() {},
+  mounted() {
+    document.title = 'NB-IoT · 物联网水表'
+  },
   methods: {
     onReady(instance, CountUp) {
       // const that = this
