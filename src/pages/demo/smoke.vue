@@ -165,7 +165,7 @@ export default {
         .then(res => {
           let data = res.data
           data.forEach((item, i) => {
-            if (i !== 0) {
+            if (i !== -1) {
               this.infoData.push(item)
             }
           })
