@@ -119,6 +119,7 @@ export default {
     this.wsMonitor(this.$route.params.imei)
   },
   mounted() {
+    document.title = 'NB-IoT · 物联网烟感'
     // let audio = document.getElementById('audio')
     // console.log(audio, 'audio')
     // document.addEventListener('DOMcontentLoaded', () => {
