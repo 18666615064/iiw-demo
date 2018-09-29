@@ -1,113 +1,41 @@
 <template lang="pug">
   .row
-    .col-12
+    .col-xs-12.col-md-8
+      q-card-media
+        img(src="../../assets/images/waterMeter.jpg")
       q-card-title
-        div(class="row items-center text-grey-6" style="font-size: 14px;")
-          span(class="text-grey-10") 最后上报：
-          q-icon(name="today")
-          span(style="padding-left: 5px") {{theMonth.cretime}}
-        div(class="row items-center text-blue-grey-9" style="font-size: 14px;")
-          |累计抄表数：{{theMonth.allVal}}
-          |<span style="padding-left: 5px; font-size: 12px;">m³</span>
-      //- q-card-title
-        | {{Wdata.name}}
+        | {{data.name}}<span style="padding-left: 5px; font-size: 14px;">{{data.code}}</span>
         div(slot="right" class="row items-center")
           q-icon(name="today")
-          span(style="padding-left: 5px") {{theMonth.cretime}}
-        //- .col-12(style="font-size: 14px;")
-          |{{Wdata.code}}
+          span(style="padding-left: 5px") 2018-09-19
       q-card-main
-        .row
-          .col-7
-            q-item-tile(label lines="1")
-              | 当月用水量 <span style="padding-left: 5px; font-size: 12px;">m³</span>
-              //- q-spinner-pie(style="padding-left: 10px" color="primary" :size="30")
-            p(class="text-faded" style="font-size: 60px;")
-              ICountUp(ref="test" :startVal="theMonth.startVal" :endVal="theMonth.endVal" :decimals="decimals" :duration="duration" :options="options" @ready="onReady")
-              i(class="iconfont icon-water" style="font-size: 24px; color: #338edc")
-          .col-5
-            q-card-main(style="padding: 0;")
-              q-item-tile(label lines="1" style="line-height: 18px")
-                |收费金额 <span style="padding-left: 5px; font-size: 12px;">￥</span>
-              p(class="text-faded" style="font-size: 40px; margin-bottom: 0")
-                ICountUp(ref="test" :startVal="theMoney.startVal" :endVal="theMoney.endVal" :decimals="Mdecimals" :duration="duration" :options="options" @ready="onReady")
-                i(class="iconfont icon-qian1 text-yellow-8" style="font-size: 24px;")
-              p(style="padding-top: 5px; font-size: 12px")
-                |收费梯度：<span class="text-grey-6">{{theMoney.grade === 1 ? '第一梯度' : theMoney.grade === 2 ? '第二梯度' : '第三梯度'}}</span>
-        q-card-separator
-        .row
-          //- .col-12
-            .row
-              .col-4
-                q-card-main(style="padding: 0;")
-                  q-item-tile(label lines="1")
-                    | 累计抄表数 <span style="padding-left: 5px; font-size: 12px;">m³</span>
-                  p(class="text-faded" style="font-size: 28px;")
-                    ICountUp(ref="test" :startVal="theMonth.startVal" :endVal="theMonth.endVal" :decimals="decimals" :duration="duration" :options="options" @ready="onReady")
-                    i(class="iconfont icon-water" style="font-size: 18px; color: #338edc")
-              .col-4
-                q-card-main(style="padding: 0;")
-                  q-item-tile(label lines="1")
-                    | 当月金额 <span style="padding-left: 5px; font-size: 12px;">￥</span>
-                  p(class="text-faded" style="font-size: 28px;")
-                    ICountUp(ref="test" :startVal="theMonth.startVal" :endVal="theMonth.endVal" :decimals="decimals" :duration="duration" :options="options" @ready="onReady")
-                    i(class="iconfont icon-qian1 text-yellow-8" style="font-size: 18px;")
-              .col-4
-                q-card-main(style="padding: 0;")
-                  q-item-tile(label lines="1")
-                    | 当前收费梯度
-                    q-icon(name="help" size="14px" color="grey-6")
-                  p(class="text-faded" style="font-size: 16px; line-height: 20px")
-                    | 第一梯度
-          .col-12(style="padding-bottom: 5px; padding-top: 20px;")
-            .row
-              .col-3
-                div(class="waterParameter-box")
-                  div(class="waterParameter-box_unit")
-                    |水温
-                    i(class="iconfont icon-shuiwen text-light-blue-8")
-                  | - - - -
-              .col-3
-                div(class="waterParameter-box")
-                  div(class="waterParameter-box_unit")
-                    |水压
-                    i(class="iconfont icon-shuiya text-brown-5")
-                  //- | 0.1<span class="waterParameter-box_unitSpan text-faded">Pa</span>
-                  | - - - -
-              .col-3
-                div(class="waterParameter-box")
-                  div(class="waterParameter-box_unit")
-                    |TDS
-                    i(class="iconfont icon-shuizhi text-green-8")
-                  | - - - -
-                  //- | 126<span class="waterParameter-box_unitSpan text-faded">PPM</span>
-              .col-3
-                div(class="waterParameter-box")
-                  div(class="waterParameter-box_unit")
-                    |信号
-                    i(class="iconfont icon-xinhao text-indigo-5")
-                  | - - - -
-                  //- span(class="waterParameter-box_unitSpan text-green-6" style="font-size: 20px") 优
-                  //- 优良差
-                  //- | -86<span class="waterParameter-box_unitSpan text-faded">dBm</span>
-        q-card-separator
-    .col-12(class="chart")
-      span(class="chart-span") 月份读表图
-      canvas(id="myChart" height="200" style="width: 100%")
-    .col-12(v-if="look")
-      .row(class="lookBox")
-        .col-3(style="font-size: 15px;") 读数
-        .col-9(style="font-size: 15px;") 时间
-        template(v-for="(item, index) in InfoList")
-          .col-3 {{item.value}}
-          .col-9 {{item.cretime}}
-    q-btn(class="fixed" style="right: 18px; top: 18px" :loading="loading" round icon="refresh" color="primary" @click="refreshChange")
-    q-btn(round color="primary" class="fixed" icon="remove_red_eye" style="right: 18px; bottom: 18px" @click="look = !look")
+        q-item-tile(label lines="1")
+          | 当月读表数 <span style="padding-left: 5px; font-size: 12px;">m³</span>
+        p(class="text-faded" style="font-size: 50px;")
+          ICountUp(:startVal="waterData[0].startVal" :endVal="waterData[0].endVal" :decimals="decimals" :duration="duration" :options="options" @ready="onReady")
+          i(class="iconfont icon-water" style="font-size: 24px; color: #338edc")
+      q-card-separator
+    .col-12
+      template(v-for="(item, index) in waterData")
+        q-item(v-if="index !== 0" multiline class="water-lint" :key="index")
+          q-item-side
+            i(class="iconfont icon-shuibiao")
+          q-item-main
+            q-item-tile(label)
+              ICountUp(style="color: #0c0c0c" :startVal="item.startVal" :endVal="item.endVal" :decimals="decimals" :duration="duration" :options="options" @ready="onReady")
+              | <span style="padding-left: 5px; font-size: 12px;">m³</span>
+            //- q-item-tile(sublabel lines="1")
+              | 读表数
+          q-item-side(right)
+            q-item-tile(stamp) 2018-09-19
+            //- q-item-tile(icon="star" color="yellow")
+    .col-12
+      canvas(id="myChart" height="260" style="width: 100%")
 </template>
 
 <script>
 import ICountUp from 'vue-countup-v2'
-import { getInfoList, getMInfoList } from '../../api/meter'
+import { getInfoImei } from '../../api/meter'
 const F2 = require('@antv/f2')
 export default {
   components: {
@@ -116,15 +44,11 @@ export default {
   name: 'waterMeter',
   data() {
     return {
-      look: false,
-      InfoList: [],
-      loading: false,
-      Wdata: {
-        name: '水表名称',
-        code: 'Water-001'
+      data: {
+        name: '*****',
+        code: ''
       },
       decimals: 0,
-      Mdecimals: 1,
       duration: 2.5,
       options: {
         useEasing: true,
@@ -134,58 +58,60 @@ export default {
         prefix: '',
         suffix: ''
       },
-      theMonth: {
+      waterData: [{
         startVal: 0,
-        endVal: 0,
-        allVal: 0,
-        cretime: '2018-9-21 13:00:00'
-      },
-      theMoney: {
-        startVal: 0,
-        endVal: 0,
-        grade: 1
-      },
-      waterData: [],
-      // mchartData: [{
-      //   money: 2,
-      //   degree: 5
-      // }, {
-      //   money: 3,
-      //   degree: 7
-      // }, {
-      //   money: 7,
-      //   degree: 10
-      // }, {
-      //   money: 9,
-      //   degree: 20
-      // }, {
-      //   money: 10,
-      //   degree: 60
-      // }],
-      chartData: [],
+        endVal: 12633
+      }, {
+        startVal: 12300,
+        endVal: 12300
+      }, {
+        startVal: 10200,
+        endVal: 10200
+      }, {
+        startVal: 11000,
+        endVal: 11000
+      }, {
+        startVal: 10000,
+        endVal: 10000
+      }, {
+        startVal: 9200,
+        endVal: 9200
+      }],
+      chartData: [{
+        year: 6,
+        age: 9200
+      }, {
+        year: 7,
+        age: 10000
+      }, {
+        year: 8,
+        age: 10100
+      }, {
+        year: 9,
+        age: 10200
+      }, {
+        year: 10,
+        age: 12300
+      }, {
+        year: 11,
+        age: 12633
+      }],
       defs: {
-        // time: {
+        // year: {
         //   range: [0, 1],
         //   max: 2020
         // },
-        tem: {
+        age: {
           tickCount: 5
         }
       }
-      // mdefs: {
-      //   degree: {
-      //     ticks: [0, 26, 34]
-      //   }
-      // }
     }
   },
   created() {
-    if (this.$route.params.device !== undefined) this.Wdata = this.$route.params.device
-    this.getInfoList()
-    this.wsMonitor(this.$route.params.imei)
+    this.getInfoImei()
   },
   mounted() {
-    document.title = 'NB-IoT · 物联网水表'
+    this._initChat()
   },
   methods: {
     onReady(instance, CountUp) {
@@ -194,23 +120,12 @@ export default {
       //   instance.update(that.waterData[0].endVal + 100)
       // }, 5000)
     },
-    refreshChange() {
-      this.loading = true
-      setTimeout(() => {
-        this.$q.notify({
-          message: '水表数据将在1小时后更新',
-          type: 'info',
-          position: 'top-left'
-        })
-        this.loading = false
-      }, 2000)
-    },
     _initChat() {
       const chart = new F2.Chart({
         id: 'myChart',
         pixelRatio: window.devicePixelRatio // 指定分辨率
       })
-      chart.axis('time', {
+      chart.axis('year', {
         label: function label(text, index, total) {
           var cfg = {
             textAlign: 'center'
@@ -226,12 +141,7 @@ export default {
       })
       chart.source(this.chartData, this.defs)
       chart.tooltip({
-        showCrosshairs: true,
-        onShow: function onShow(ev) {
-          var items = ev.items
-          items[0].name = null
-          items[0].value = `${items[0].title}，用水：${items[0].value}m³`
-        }
+        showCrosshairs: true
       })
       chart.guide().tag({
         position: [2017, 30.12],
@@ -245,16 +155,8 @@ export default {
           fill: '#8659AF'
         }
       })
-      chart
-        .line()
-        .position('time*tem')
-        .shape('smooth')
-        .color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
-      chart
-        .area()
-        .position('time*tem')
-        .shape('smooth')
-        .color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
+      chart.line().position('year*age').shape('smooth').color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
+      chart.area().position('year*age').shape('smooth').color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
       chart.render()
       // // Step 2: 载入数据源
       // chart.source(this.data)
@@ -264,135 +166,18 @@ export default {
 
       // // Step 4: 渲染图表
       // chart.render()
-      // 当月消费梯度图表
-      // const mounthChart = new F2.Chart({
-      //   id: 'mounthChart',
-      //   pixelRatio: window.devicePixelRatio // 指定分辨率
-      // })
-      // mounthChart.axis('degree', {
-      //   label: function label(text, index, total) {
-      //     var cfg = {
-      //       textAlign: 'center'
-      //     }
-      //     if (index === 0) {
-      //       cfg.textAlign = 'start'
-      //     }
-      //     if (index > 0 && index === total - 1) {
-      //       cfg.textAlign = 'end'
-      //     }
-      //     return cfg
-      //   }
-      // })
-      // mounthChart.source(this.mchartData, this.mdefs)
-      // mounthChart.tooltip({
-      //   showCrosshairs: true,
-      //   onShow: function onShow(ev) {
-      //     var items = ev.items
-      //     items[0].name = null
-      //     items[0].value = `用水：${items[0].value}m³，金额：123￥`
-      //   }
-      // })
-      // mounthChart.guide().tag({
-      //   position: [2017, 30.12],
-      //   content: '30.12',
-      //   direct: 'tl',
-      //   offsetY: -5,
-      //   background: {
-      //     fill: '#8659AF'
-      //   },
-      //   pointStyle: {
-      //     fill: '#8659AF'
-      //   }
-      // })
-      // mounthChart.line().position('degree*money').shape('smooth').color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
-      // mounthChart.area().position('degree*money').shape('smooth').color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
-      // mounthChart.render()
     },
-    getInfoList() {
-      let query = {
-        imei: this.$route.params.imei,
-        name: 'water_load',
-        size: 24
-      }
-      getInfoList(query)
-        .then(res => {
-          let data = res.data
-          data.forEach((item, i) => {
-            if (i === 0) {
-              item.endVal = 0
-              item.allVal = item.value
-              this.theMonth = item
-            }
-          })
-          this.InfoList = data
-          console.log(this.InfoList, 'InfoList')
-          this.getMInfoList() // 获取历史月份数据
+    getInfoImei() {
+      getInfoImei('869664030006491').then(res => {
+        let data = res.data
+        this.data = data.device
+        console.log(data, 'data')
+      }).catch(error => {
+        this.$q.notify({
+          message: error.message,
+          type: 'negative',
+          position: 'top-left'
         })
-        .catch(error => {
-          this.$q.notify({
-            message: error.message,
-            type: 'negative',
-            position: 'top-left'
-          })
-        })
-    },
-    getMInfoList() {
-      let query = {
-        imei: this.$route.params.imei,
-        name: 'water_load',
-        size: 10
-      }
-      getMInfoList(query)
-        .then(res => {
-          console.log(res, 'getMInfoListgetMInfoList')
-          let data = res.data
-          this.chartData = []
-          data.forEach((item, i) => {
-            if (i === 0) {
-              console.log(parseInt(this.theMonth.value), parseInt(item.value), 'parseInt(this.theMonth.value) - parseInt(item.value)')
-              this.theMonth.endVal = parseInt(this.theMonth.value) - parseInt(item.value)
-              this.theMoney.endVal = this.Moneytransform(this.theMonth.endVal)
-            }
-            let json = {}
-            let time = new Date(item.cretime)
-            json.time = `${time.getMonth()}月`
-            json.tem = item.value
-            this.chartData.push(json)
-          })
-          this.chartData.reverse()
-          this._initChat()
-        })
-        .catch(error => {
-          this.$q.notify({
-            message: error.message,
-            type: 'negative',
-            position: 'top-left'
-          })
-        })
-    },
-    // 第一阶梯 26m³以下 1.98 ; 27m³-34m³之间 2.97 ; 34m³以上 3.96
-    Moneytransform(tem) {
-      let num = parseInt(tem)
-      let money = 0
-      if (num < 27) {
-        money = num * 1.98
-        this.theMoney.grade = 1
-      } else if (num >= 27 && num <= 34) {
-        money = 27 * 1.98 + (num - 27) * 2.97
-        this.theMoney.grade = 2
-      } else {
-        money = 27 * 1.98 + 7 * 2.97 + (num - 34) * 3.96
-        this.theMoney.grade = 3
-      }
-      return money
-    },
-    wsMonitor(imei) {
-      // var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
-      var es = new EventSource(`/admin/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
-      es.addEventListener('dataLog', e => {
-        console.log(e, 'addEventListener')
-        this.getInfoList()
-        this.getMInfoList()
       })
     }
   }
@@ -400,71 +185,22 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.iCountUp {
-  font-size: 12em;
-  margin: 0;
-  color: #4d63bc;
-}
-.water-lint {
-  i {
-    font-size: 30px;
+  .iCountUp {
+    font-size: 12em;
+    margin: 0;
+    color: #4d63bc;
   }
-}
-.water-parameter {
-  display: inline-block;
-  font-size: 14px;
-  line-height: 14px;
-  margin-bottom: 20px;
-  span {
-    padding-left: 15px;
-    color: #757575;
-  }
-}
-.waterParameter-box {
-  position: relative;
-  // padding-left: 10px;
-  height: 70px;
-  line-height: 70px;
-  font-size: 24px;
-  .waterParameter-box_unit {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    line-height: 20px;
-    font-size: 12px;
-    .iconfont {
-      padding-left: 3px;
-      font-size: 13px;
+  .water-lint {
+    i {
+      font-size: 30px;
     }
   }
-  .waterParameter-box_unitSpan {
-    padding-left: 5px;
-    font-size: 12px;
-  }
-}
-.chart {
-  position: relative;
-  .chart-span {
-    position: absolute;
-    top: -10px;
-    left: 17px;
-    color: #757575;
-    font-size: 12px;
-  }
-}
-.lookBox {
-  padding: 0 20px;
-  font-size: 12px;
-  padding-bottom: 20px;
-  line-height: 24px;
-}
 </style>
 
 <style lang="less">
-.water-lint {
-  .q-item-label {
-    line-height: 2;
+  .water-lint {
+    .q-item-label {
+      line-height: 2.0;
+    }
   }
-}
 </style>

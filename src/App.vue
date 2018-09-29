@@ -5,15 +5,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VueWebsocket from '../src/utils/eventsource'
-Vue.use(VueWebsocket, '/devicecenter/es/listener')
-
 export default {
-  name: 'App',
-  created() {
-    console.log(VueWebsocket, 'url')
-  }
+  name: 'App'
 }
 </script>
 
