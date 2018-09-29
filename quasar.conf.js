@@ -43,7 +43,7 @@ module.exports = function (ctx) {
     },
     devServer: {
       // https: true,
-      open: false
+      open: false,
       // host: '192.168.20.185',
       // port: 8080,
       // open: false, // opens browser window automatically
@@ -59,6 +59,14 @@ module.exports = function (ctx) {
       //     }
       //   }
       // }
+      proxy: {
+        '/server': {
+          target: 'http://127.0.0.1:8807',
+          pathRewrite: {
+            '^/server': ''
+          }
+        }
+      }
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {

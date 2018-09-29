@@ -337,10 +337,10 @@ export default {
         date = new Date(tempTime * 1000)
         let Y = date.getFullYear() + '-'
         let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-        let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+        let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
         let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
         let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
-        let s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+        let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
         return Y + M + D + h + m + s
       } else {
         date = new Date(time)
@@ -350,7 +350,7 @@ export default {
     },
     wsMonitor(imei) {
       // var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
-      var es = new EventSource(`/admin/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
+      var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
       es.addEventListener('dataLog', e => {
         this.getInfoList()
         this.getMInfoList()

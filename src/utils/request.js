@@ -4,7 +4,7 @@ import axios from 'axios'
 import qs from 'qs'
 // create an axios instance
 const service = axios.create({
-  baseURL: '/admin/devicecenter',
+  baseURL: '/server',
   timeout: 5000,
   withCredentials: false,
   headers: {
