@@ -350,7 +350,7 @@ export default {
     },
     wsMonitor(imei) {
       // var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
-      var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
+      var es = new EventSource(`/admin/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
       es.addEventListener('dataLog', e => {
         this.getInfoList()
         this.getMInfoList()
