@@ -51,8 +51,8 @@ module.exports = function (ctx) {
       //   // 将所有以/api开头的请求代理到jsonplaceholder
       //   '/server': {
       //     // target: 'http://api.iotdev.top/admin/devicecenter',
-      //     // target: 'http://1u5517x920.imwork.net:12028',
-      //     target: 'http://192.168.20.240:8807',
+      //     target: 'http://1u5517x920.imwork.net:12028',
+      //     // target: 'http://192.168.20.236:8807',
       //     changeOrigin: true,
       //     pathRewrite: {
       //       '^/server': ''

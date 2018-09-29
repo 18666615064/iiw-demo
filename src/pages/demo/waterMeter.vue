@@ -7,7 +7,7 @@
           q-icon(name="today")
           span(style="padding-left: 5px") {{theMonth.cretime}}
         div(class="row items-center text-blue-grey-9" style="font-size: 14px;")
-          |累计抄表数：{{theMonth.allVal}}
+          |累计用水：{{theMonth.allVal}}
           |<span style="padding-left: 5px; font-size: 12px;">m³</span>
       //- q-card-title
         | {{Wdata.name}}
@@ -32,33 +32,26 @@
               p(class="text-faded" style="font-size: 40px; margin-bottom: 0")
                 ICountUp(ref="test" :startVal="theMoney.startVal" :endVal="theMoney.endVal" :decimals="Mdecimals" :duration="duration" :options="options" @ready="onReady")
                 i(class="iconfont icon-qian1 text-yellow-8" style="font-size: 24px;")
-              p(style="padding-top: 5px; font-size: 12px")
+              p(class="gradient" @click="showing = true")
                 |收费梯度：<span class="text-grey-6">{{theMoney.grade === 1 ? '第一梯度' : theMoney.grade === 2 ? '第二梯度' : '第三梯度'}}</span>
+                q-icon(style="padding-left: 5px; font-size: 18px; vertical-align: middle" name="help_outline" color="grey-6")
+                q-modal(v-model="showing" position="top")
+                  q-card-main
+                    q-item-tile(style="font-size: 16px;") 收费标准
+                  .gradient_popover
+                    .row
+                      .col-2 第一梯度
+                      .col-10(class="text-grey-7") 每户每月用水量26立方米及下
+                      .col-10.offset-2(class="text-grey-7") 水价：1.95/m³
+                      .col-2 第二梯度
+                      .col-10(class="text-grey-7") 每户每月用水量27-34立方米，含34立方米
+                      .col-10.offset-2(class="text-grey-7") 水价：2.97/m³
+                      .col-2 第三梯度
+                      .col-10(class="text-grey-7") 每户每月用水量34立方米以上
+                      .col-10.offset-2(class="text-grey-7") 水价：3.96/m³
+                      .col-12(class="text-red-8") * 该收费标准来自2018年广州市居民用水价格标准
         q-card-separator
         .row
-          //- .col-12
-            .row
-              .col-4
-                q-card-main(style="padding: 0;")
-                  q-item-tile(label lines="1")
-                    | 累计抄表数 <span style="padding-left: 5px; font-size: 12px;">m³</span>
-                  p(class="text-faded" style="font-size: 28px;")
-                    ICountUp(ref="test" :startVal="theMonth.startVal" :endVal="theMonth.endVal" :decimals="decimals" :duration="duration" :options="options" @ready="onReady")
-                    i(class="iconfont icon-water" style="font-size: 18px; color: #338edc")
-              .col-4
-                q-card-main(style="padding: 0;")
-                  q-item-tile(label lines="1")
-                    | 当月金额 <span style="padding-left: 5px; font-size: 12px;">￥</span>
-                  p(class="text-faded" style="font-size: 28px;")
-                    ICountUp(ref="test" :startVal="theMonth.startVal" :endVal="theMonth.endVal" :decimals="decimals" :duration="duration" :options="options" @ready="onReady")
-                    i(class="iconfont icon-qian1 text-yellow-8" style="font-size: 18px;")
-              .col-4
-                q-card-main(style="padding: 0;")
-                  q-item-tile(label lines="1")
-                    | 当前收费梯度
-                    q-icon(name="help" size="14px" color="grey-6")
-                  p(class="text-faded" style="font-size: 16px; line-height: 20px")
-                    | 第一梯度
           .col-12(style="padding-bottom: 5px; padding-top: 20px;")
             .row
               .col-3
@@ -138,6 +131,7 @@ export default {
         }
       ],
       look: false,
+      showing: false,
       InfoList: [],
       loading: false,
       decimals: 0,
@@ -186,6 +180,7 @@ export default {
           // max: 2020
         },
         tem: {
+          min: 0,
           tickCount: 5
         }
       }
@@ -215,7 +210,7 @@ export default {
       this.loading = true
       setTimeout(() => {
         this.$q.notify({
-          message: '水表数据将在1小时后更新',
+          message: `数据大约在 ${this.theMonth.msgTime} 更新`,
           type: 'info',
           position: 'top-left'
         })
@@ -317,65 +312,6 @@ export default {
       // mounthChart.area().position('degree*money').shape('smooth').color('l(0) 0:#F2C587 0.5:#ED7973 1:#8659AF')
       // mounthChart.render()
     },
-    getInfoList() {
-      let query = {
-        imei: this.$route.params.imei,
-        name: 'water_load',
-        size: 24
-      }
-      getInfoList(query)
-        .then(res => {
-          let data = res.data
-          data.forEach((item, i) => {
-            if (i === 0) {
-              this.theMonth.endVal = 0
-              this.theMonth.allVal = item.value
-            }
-          })
-          this.InfoList = data
-          console.log(this.InfoList, 'InfoList')
-          this.getMInfoList() // 获取历史月份数据
-        })
-        .catch(error => {
-          this.$q.notify({
-            message: error.message,
-            type: 'negative',
-            position: 'top-left'
-          })
-        })
-    },
-    getMInfoList() {
-      let query = {
-        imei: this.$route.params.imei,
-        name: 'water_load',
-        size: 10
-      }
-      getMInfoList(query)
-        .then(res => {
-          let data = res.data
-          this.chartData = []
-          data.forEach((item, i) => {
-            if (i === 0) {
-              this.theMonth.endVal = parseInt(this.theMonth.value) - parseInt(item.value)
-              this.theMoney.endVal = this.Moneytransform(this.theMonth.endVal)
-            }
-            let json = {}
-            json.time = `${this.Timestamps(item.cretime)}月`
-            json.tem = item.value
-            this.chartData.push(json)
-          })
-          this.chartData.reverse()
-          // this.testChar()
-          this._initChat()
-        })
-        .catch(error => {
-          this.$q.notify({
-            message: error.message,
-            type: 'negative',
-            position: 'top-left'
-          })
-        })
-    },
     // 第一阶梯 26m³以下 1.98  27m³-34m³之间 2.97  34m³以上 3.96
     Moneytransform(tem) {
       let num = parseInt(tem)
@@ -393,15 +329,24 @@ export default {
       return money
     },
     Timestamps(time, type) {
-      var date = new Date(time) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
-      // var Y = date.getFullYear() + '-'
-      // var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-      // var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
-      // var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
-      // var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
-      // var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
-      var M = date.getMonth() + 1
-      return M
+      // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      let date = null
+      if (type) {
+        let tempTime = new Date(time).getTime() / 1000
+        tempTime += 3600
+        date = new Date(tempTime * 1000)
+        let Y = date.getFullYear() + '-'
+        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+        let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+        let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+        let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+        let s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+        return Y + M + D + h + m + s
+      } else {
+        date = new Date(time)
+        let M = date.getMonth() + 1
+        return M
+      }
     },
     wsMonitor(imei) {
       // var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
@@ -410,6 +355,66 @@ export default {
         this.getInfoList()
         this.getMInfoList()
       })
+    },
+    getInfoList() {
+      getInfoList({
+        imei: this.$route.params.imei,
+        name: 'water_load',
+        size: 24
+      })
+        .then(res => {
+          let data = res.data
+          data.forEach((item, i) => {
+            if (i === 0) {
+              this.theMonth = item
+              this.theMonth.endVal = 0
+              this.theMonth.allVal = item.value
+              this.theMonth.msgTime = this.Timestamps(item.cretime, true)
+            }
+          })
+          this.InfoList = data
+          this.getMInfoList() // 获取历史月份数据
+        })
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            type: 'negative',
+            position: 'top-left'
+          })
+        })
+    },
+    getMInfoList() {
+      getMInfoList({
+        imei: this.$route.params.imei,
+        name: 'water_load',
+        size: 11
+      })
+        .then(res => {
+          let data = res.data.reverse()
+          this.chartData = []
+          for (let i in data) {
+            let json = {}
+            let tem = null
+            if (i > 0) {
+              tem = data[i].value - data[i - 1].value
+              json.tem = tem
+              json.time = `${this.Timestamps(data[i].cretime)}月`
+            }
+            if (data.length === Number(i) + 1) {
+              this.theMonth.endVal = parseInt(this.theMonth.value) - parseInt(data[i].value)
+              this.theMoney.endVal = this.Moneytransform(this.theMonth.endVal)
+            }
+            this.chartData.push(json)
+          }
+          this._initChat()
+        })
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            type: 'negative',
+            position: 'top-left'
+          })
+        })
     }
   }
 }
@@ -441,6 +446,7 @@ export default {
   // padding-left: 10px;
   height: 70px;
   line-height: 70px;
+  text-align: center;
   font-size: 24px;
   .waterParameter-box_unit {
     position: absolute;
@@ -474,6 +480,19 @@ export default {
   font-size: 12px;
   padding-bottom: 20px;
   line-height: 24px;
+}
+.gradient {
+  margin-bottom: 0;
+  padding-top: 5px;
+  padding-bottom: 15px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.gradient_popover {
+  padding: 0 15px;
+  padding-bottom: 15px;
+  font-size: 12px;
+  line-height: 30px;
 }
 </style>
 
