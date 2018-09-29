@@ -11,13 +11,12 @@
           q-btn(push label="保存" icon="fa fa-save" size="xs")
     .row
       .col-8
-        codemirror(ref="myCm" :value="codemirrorData" :options="cmOptions" @changes="changes" style="width: 500px; height: 200px;")
+        codemirror(ref="myCm" :value="codemirrorData" :options="cmOptions" @changes="changes" style="")
       //- .col-8
         textarea(ref="editbox").scriptbox
       .col-4
         .android-preview
-          //-iframe.previewframe
-          editorvalue(v-if="running")
+          editorvalue(v-if="running").previewframe
 </template>
 <script>
 import Vue from 'vue'
@@ -63,12 +62,9 @@ export default {
   component: {
     codemirror
   },
-  created() {
-  },
+  created() {},
   methods: {
-    changes(data) {
-      console.log(data, 'data')
-    },
+    changes(data) {},
     onResize() {
       if (this.editor) {
         this.editor.setSize('99%', '100%')
@@ -77,46 +73,65 @@ export default {
     },
     run() {
       let self = this
-      // let value = this.editor.getValue()
+      let value = this.editor.getValue()
       self.running = false
-      self.running = true
       Vue.component('editorvalue', function(resolve, reject) {
-        // console.log(value)
-        // resolve(value)
-        require(['./demo.vue'], resolve)
+        let dom = document.createElement('div')
+        dom.innerHTML = value
+        let scripx = 'scripx=' + dom.getElementsByTagName('script')[0].innerText
+        let fun = eval
+        try {
+          scripx = fun(scripx.replace('export default()', ''))
+        } catch (e) {
+          self.$q.notify({
+            timeout: 2000,
+            icon: 'fas fa-warning',
+            type: 'negative',
+            message: '代码有误: ' + e.message,
+            position: 'top'
+          })
+          console.error(e)
+          console.dir(e.stack)
+          return
+        }
+
+        self.$q.notify({
+          timeout: 2000,
+          icon: 'fas fa-angle-right',
+          type: 'positive',
+          message: '运行成功',
+          position: 'top'
+        })
+        dom = dom.getElementsByTagName('template')[0].innerHTML.trim()
+        try {
+          resolve(
+            Object.assign(
+              {
+                template: dom
+              },
+              scripx
+            )
+          )
+        } catch (e) {
+          self.$q.notify({
+            timeout: 2000,
+            icon: 'fas fa-warning',
+            type: 'negative',
+            message: '代码有误: ' + e.message,
+            position: 'top'
+          })
+          console.error(e)
+          console.dir(e.stack)
+        }
       })
+      self.running = true
       // Vue.component('editorvalue', () => {
       //   import('statics/editor/value/editing.vue')
       // })
     }
   },
   mounted() {
-    this.$axios.get('./demo2.vue').then(res => {
-      console.log(res)
-    })
-    // let el = this.$refs['editbox']
-    // CodeMirror.commands.autocomplete = function(cm) {
-    //   cm.showHint({ hint: CodeMirror.hint.anyword })
-    // }
-    // let editor = CodeMirror.fromTextArea(el, {
-    //   mode: {
-    //     name: 'vue',
-    //     globalVars: true
-    //   },
-    //   extraKeys: { 'Alt-/': 'autocomplete' },
-    //   selectionPointer: true,
-    //   theme: 'idea',
-    //   indentUnit: 2,
-    //   lineWrapping: true,
-    //   matchBrackets: true,
-    //   styleActiveLine: true,
-    //   smartIndent: true,
-    //   tabSize: 2,
-    //   indentWithTabs: true,
-    //   lineNumbers: true,
-    //   autofocus: true
-    // })
-    // this.editor = editor
+    this.editor = this.$refs.myCm.codemirror
     this.onResize()
     // this.$store.state.code.editingitem
     // 读取如果是新的就读取模板或者读取cookie// 防止刷新后数据丢失
@@ -129,7 +144,7 @@ export default {
       if (this.tempFalse /* Cookies.get('editingitem') */) {
         // editor.setValue(Cookies.get('editingitem'))
       } else {
-        let template = '<template lang="pug">\n  div\n</template>\n\n<script>\n  export default {\n    data() {\n      return {}\n    }\n  }\n<//script>\n\n<style lang="less">\n</style>'
+        let template = '<template>\n  <div></div>\n</template>\n\n<script>\n {\n\tdata() {\n\t\treturn {}\n\t},\n\tmethods:{}\n }\n</' + 'script>\n\n<style lang="less">\n</style>'
         this.codemirrorData = template
         // editor.setValue(template)
         Cookies.set('editingitem', {
@@ -165,6 +180,7 @@ export default {
     left: 82px;
     height: 72%;
     border-radius: 5px;
+    width: 307px;
   }
 }
 </style>

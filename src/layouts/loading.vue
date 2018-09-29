@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { getInfoImei } from '../api/meter'
+import { getInfoImei } from '@/api/meter'
 export default {
   data() {
     return {
@@ -33,6 +33,9 @@ export default {
           switch (data.product.name) {
             case 'NB-Water':
               this.$router.push({ name: 'waterMeter', params: data })
+              break
+            case 'NB-Smoke':
+              this.$router.push({ name: 'smoke', params: data })
               break
             default:
               this.msg = '找不到改设备'

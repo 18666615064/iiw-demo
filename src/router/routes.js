@@ -34,6 +34,15 @@ const routes = [{
     component: () =>
       import('pages/demo/test.vue')
   }]
+}, {
+  path: '/loading/:id',
+  component: () =>
+    import('layouts/loading.vue')
+}, {
+  path: '/smoke',
+  name: 'smoke',
+  component: () =>
+    import('pages/demo/smoke.vue')
 }]
 // Always leave this as last one
 if (process.env.MODE !== 'ssr') {

@@ -1,9 +1,9 @@
 const path = require('path')
 // Configuration for your app
-module.exports = function(ctx) {
+module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
-    plugins: ['i18n', 'axios', 'codemirror'],
+    plugins: ['i18n', 'axios', 'codemirror', 'BaiduMap'],
     css: ['app.styl'],
     extras: [
       ctx.theme.mat ? 'roboto-font' : null, 'material-icons', 'fontawesome' // optional, you are not bound to it
@@ -34,28 +34,36 @@ module.exports = function(ctx) {
           test: /\.less$/,
           loader: 'less-loader'
         })
+        cfg.resolve.alias.vue = 'vue/dist/vue.esm.js'
+      },
+      chainWebpack(chain) {
+        chain.resolve.alias
+          .set('@', path.resolve(__dirname, './src'))
       }
     },
     devServer: {
       // https: true,
-      // host: '192.168.20.236',
+      open: false
+      // host: '192.168.20.185',
       // port: 8080,
-      open: false, // opens browser window automatically
-      proxy: {
-        // 将所有以/api开头的请求代理到jsonplaceholder
-        '/server': {
-          target: 'http://1u5517x920.imwork.net:12028',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/server': ''
-          }
-        }
-      }
+      // open: false, // opens browser window automatically
+      // proxy: {
+      //   // 将所有以/api开头的请求代理到jsonplaceholder
+      //   '/server': {
+      //     // target: 'http://api.iotdev.top/admin/devicecenter',
+      //     // target: 'http://1u5517x920.imwork.net:12028',
+      //     target: 'http://192.168.20.240:8807',
+      //     changeOrigin: true,
+      //     pathRewrite: {
+      //       '^/server': ''
+      //     }
+      //   }
+      // }
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
-      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile'],
-      directives: ['Ripple'],
+      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction', 'QTable', 'QTh', 'QTr', 'QTd', 'QToggle', 'QProgress', 'QModal'],
+      directives: ['Ripple', 'CloseOverlay'],
       // Quasar plugins
       plugins: ['Notify', 'Dialog'],
       iconSet: 'fontawesome',
@@ -63,7 +71,7 @@ module.exports = function(ctx) {
       i18n: 'zh-hans' // Quasar language
     },
     // animations: 'all' --- includes all animations
-    animations: [],
+    animations: 'all',
     ssr: {
       pwa: false
     },

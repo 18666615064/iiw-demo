@@ -10,7 +10,8 @@
           div
             q-collapsible(icon="fas fa-edit" label="模板编辑器" :popup="true" group="item" @show="openEditor")
             q-collapsible(icon="fas fa-edit" label="示例中心" :popup="true" group="item" @show="openDemo")
-            q-collapsible(icon="fas fa-edit" label="test" :popup="true" group="item" @show="test")
+            q-collapsible(icon="fas fa-edit" label="水表" :popup="true" group="item" @show="openwater")
+            q-collapsible(icon="fas fa-edit" label="烟感" :popup="true" group="item" @show="opensmoke")
             q-collapsible(icon="fas fa-list" label="支持设备" :popup="true" group="item")
               q-list(hightlight inset-separator no-border)
                 q-item(v-for="item in product" :key="item.id")
@@ -61,10 +62,14 @@ export default {
       this.$router.push({ path: '/code' })
     },
     openDemo() {
-      this.$router.push({ name: 'waterMeter' })
+      // this.$router.push({ name: 'waterMeter' })
+      this.$router.push({ path: '/smoke' })
     },
-    test() {
-      this.$router.push({ path: '/test' })
+    openwater() {
+      this.$router.push({ path: '/loading/869664030006491' })
+    },
+    opensmoke() {
+      this.$router.push({ path: '/loading/868194030005559' })
     }
   }
 }
