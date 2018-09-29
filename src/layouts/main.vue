@@ -69,7 +69,7 @@ export default {
       this.$router.push({ path: '/loading/869664030006491' })
     },
     opensmoke() {
-      this.$router.push({ path: '/loading/868194030005559' })
+      this.$router.push({ path: '/loading/869664030000510' })
     }
   }
 }

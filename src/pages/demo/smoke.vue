@@ -1,10 +1,11 @@
 <template lang="pug">
-  .smoke-outer
+  .smoke-outer(:style="this.infoData.length < 4 ? 'height: 100vh' : ''")
     .row
       .col-12
         div(@click="opened = true")
           .mapBtn
-            i(class="iconfont icon-huo text-red-9")
+            q-icon(v-if="checked" name="place" color="blue-6")
+            i(v-else class="iconfont icon-huo text-red-9")
           span(class="imgTitle")
             |设备状态：<span :class="checked ? 'text-light-green-6' : 'text-deep-orange-13'">{{ checked ? '正常' : '告警' }}</span>
           q-card-media(class="imgBox" style="overflow: inherit;")
@@ -15,9 +16,9 @@
             img(src="../../assets/images/smoke.png")
             .breathe-btn(:class="checked ? '' : 'active'")
           q-card-separator
-          .current-list
+          //- .current-list
             i(class="iconfont icon-kongzhi text-blue-grey-6")
-            | 设备强控
+            | 设备调试
             .current-list_right
               q-toggle(v-model="checked" @onchage="toggleChange")
           .current-list
@@ -25,38 +26,38 @@
             | 剩余电量
             .current-list_right
               q-progress(:percentage="progressBuffer" color="green-5")
-              | 30%
+              | 74%
           .current-list
             i(class="iconfont icon-shijian text-blue-7")
-            | 最后上报
+            | 检测时间
             .current-list_right
               //- q-icon(name="today")
-              span(style="padding-left: 5px") 2018-09-27 13:15:00
-      .col-12
+              span(style="padding-left: 5px") {{nowInfo.cretime}}
+      .col-12(style="margin-bottom: 10px")
         div
           .list_title 历史记录
-          q-list(inset-separator style="border-width: 0;")
-            q-item
+          q-list(inset-separator class="list-reset")
+            //- q-item
               q-item-side(class="text-light-green-6")
                 i(class="iconfont icon-wuxianyangan")
               q-item-main(sublabel-lines="1" class="text-light-green-6") 正常
               q-item-side(right)
-                q-item-tile(stamp="2018-09-27 13:15:00") 2018-09-27 13:15:00
-            q-item
+                q-item-tile 2018-09-27 13:15:00
+            //- q-item
               q-item-side(class="text-deep-orange-13")
                 i(class="iconfont icon-wuxianyangan")
               q-item-main(sublabel-lines="1" class="text-deep-orange-13") 告警
               q-item-side(right)
-                q-item-tile(stamp="2018-09-27 13:15:00") 2018-09-27 13:15:00
+                q-item-tile 2018-09-27 13:15:00
             template(v-for="(item, index) in infoData")
               q-item(:key="index")
-                q-item-side(:class="item.value === '0' ? 'text-light-green-6' : 'text-deep-orange-13'")
+                q-item-side(:class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'")
                   i(class="iconfont icon-wuxianyangan")
-                q-item-main(sublabel-lines="1" :class="item.value === '0' ? 'text-light-green-6' : 'text-deep-orange-13'") {{ item.value === '0' ? '正常' : '告警' }}
+                q-item-main(sublabel-lines="1" :class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'") {{ item.value === '1' ? '告警' : item.value === '2' ? '告警结束' : '正常' }}
                 q-item-side(right)
-                  q-item-tile(stamp="item.cretime")
+                  q-item-tile {{item.cretime}}
     q-modal(v-model="opened" position="bottom")
-      div(style="padding-bottom: 70px")
+      div(:style="checked ? 'padding-bottom: 20px' : 'padding-bottom: 70px'")
         .mapBox
           baidu-map(ref="map" :center="center" :zoom="zoom" @ready="initMap" style="width: 100%; height: 300px;")
             //- bm-marker(:position="center" animation="BMAP_ANIMATION_BOUNCE" :icon="{url: '../../assets/images/smoke-e.png', size: {width: 30, height: 38}}" :offset="{width: 0, height: -20}")
@@ -69,7 +70,7 @@
             .circle
         .current-list
           i(class="iconfont icon-dizhi text-grey-7")
-          | 告警地址
+          | {{ checked ? '烟感地址' : '告警地址' }}
           .current-list_right
             | {{address}}
         //- .current-list
@@ -78,83 +79,134 @@
             |<a href="tel:119" class="testa"><q-icon name="call" class="icon-tel-consult"></q-icon></a>
         .current-list
           i(class="iconfont icon-shijian text-blue-7")
-          | 告警时间
+          | {{ checked ? '检测时间' : '告警时间' }}
           .current-list_right
             q-icon(name="today")
             span(style="padding-left: 5px") 2018-09-27 13:15:00
-        .phoneBtn(class="fixed")
-          |<a href="tel:13539440237" class="phoneA"><q-icon name="call" class="icon-tel-consult"></q-icon></a>
-        //- audio(id='audio' src='http://go.163.com/2018/0209/mengniu/audio/bgm.mp3' autoplay loop)
+        .phoneBtn(v-if="!checked" class="fixed")
+          |<a href="tel:119" class="phoneA"><q-icon name="call" class="icon-tel-consult"></q-icon></a>
+        //- audio(id='audio' src='http://go.163.com/2018/0209/mengniu/audio/bgm.mp3' loop)
         //- q-btn(class="fixed" style="left: 18px; top: 18px" color="primary" icon="reply" round @click="opened = false")
 </template>
 
 <script>
 // import AMap from 'AMap'
-/* eslint-disable */
 import { getInfoList } from '@/api/meter'
 export default {
   data() {
     return {
       checked: true,
-      progressBuffer: 30,
+      progressBuffer: 74,
       infoData: [],
-      opened: true,
+      nowInfo: {},
+      opened: false,
       map: null,
       center: {
-        lng: 0,
-        lat: 0
+        lng: 113.413206,
+        lat: 23.158174
       },
-      zoom: 3,
+      zoom: 19,
       marker: null,
-      address: ''
+      address: '',
+      iconUrl: {
+        error: require('../../assets/images/smoke-e.png'),
+        normal: require('../../assets/images/smoke-n.png')
+      }
     }
   },
   created() {
     this.getInfoList()
+    this.wsMonitor(this.$route.params.imei)
+  },
+  mounted() {
+    // let audio = document.getElementById('audio')
+    // console.log(audio, 'audio')
+    // document.addEventListener('DOMcontentLoaded', () => {
+    //   this.$q.notify({
+    //     message: 'DOMcontentLoaded',
+    //     type: 'positive',
+    //     position: 'bottom-left'
+    //   })
+    //   document.addEventListener('WeixinJSBridgeReady', () => {
+    //     this.$q.notify({
+    //       message: 'WeixinJSBridgeReady',
+    //       type: 'positive',
+    //       position: 'bottom-left'
+    //     })
+    //     audio.play()
+    //   }, false)
+    // })
+    // document.addEventListener('touchstart', () => {
+    //   this.$q.notify({
+    //     message: 'touchstart',
+    //     type: 'positive',
+    //     position: 'bottom-left'
+    //   })
+    //   audio.play()
+    // })
   },
   methods: {
     toggleChange(val) {
       console.log(val, 'val')
     },
-    initMap({BMap, map}) {
-      console.log(map)
-      this.center.lng = 113.354457
-      this.center.lat = 23.070887
-      this.zoom = 19
+    wsMonitor(imei) {
+      // var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
+      var es = new EventSource(`/admin/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
+      es.addEventListener('dataLog', e => {
+        this.getInfoList()
+      })
+    },
+    getInfoList() {
+      getInfoList({
+        imei: this.$route.params.imei,
+        name: 'alarm',
+        size: 10
+      })
+        .then(res => {
+          let data = res.data
+          data.forEach((item, i) => {
+            if (i !== 0) {
+              this.infoData.push(item)
+            }
+          })
+          if (data[0].value === '1') {
+            this.checked = false
+          } else {
+            this.checked = true
+          }
+          this.nowInfo = data[0]
+        })
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            type: 'negative',
+            position: 'top-left'
+          })
+        })
+    },
+    /* eslint-disable */
+    initMap({ BMap, map }) {
+      console.log(map.getZoom())
       this.map = map
-      
-      let point = new BMap.Point(113.354457, 23.070887)
-      let icon = new BMap.Icon(require('../../assets/images/smoke-e.png'), new BMap.Size(30, 38))
-      let marker = new BMap.Marker(point, { icon: icon})
+      let point = new BMap.Point(this.center.lng, this.center.lat)
+      let iconurl = null
+      if (this.checked) {
+        iconurl = this.iconUrl.normal
+      } else {
+        iconurl = this.iconUrl.error
+      }
+      let icon = new BMap.Icon(iconurl, new BMap.Size(30, 38))
+      let marker = new BMap.Marker(point, { icon: icon })
       map.addOverlay(marker)
       this.marker = marker
 
       let myGeo = new BMap.Geocoder()
-      myGeo.getLocation(point, (res) => {
-        console.log(res, 'res')
+      myGeo.getLocation(point, res => {
         this.address = res.address
       })
     },
     locateChange(e) {
-      console.log(e, '222')
-      console.log(window)
-      this.map.centerAndZoom(new BMap.Point(113.354457, 23.070887), 19)
-    },
-    getInfoList() {
-      let query = {
-        imei: this.$route.params.imei,
-        name: 'alarm',
-        size: 24
-      }
-      getInfoList(query).then(res => {
-        this.infoData = res.data
-      }).catch(error => {
-        this.$q.notify({
-          message: error.message,
-          type: 'negative',
-          position: 'top-left'
-        })
-      })
+      this.map.centerAndZoom(new BMap.Point(this.center.lng, this.center.lat), 19)
     }
   }
 }
@@ -175,6 +227,7 @@ export default {
   position: absolute;
   top: 10px;
   right: 10px;
+  font-size: 30px;
   cursor: pointer;
   .icon-huo {
     font-size: 30px;
@@ -200,7 +253,7 @@ export default {
   }
 }
 .smoke-outer {
-  height: 100vh;
+  // height: 100vh;
   background-color: #efefef;
   // background: linear-gradient(#6195A2,#CCE9D6);
 }
@@ -223,6 +276,13 @@ export default {
   padding-top: 8px;
   padding-left: 12px;
   font-size: 14px;
+}
+.list-reset {
+  margin: 8px 0;
+  padding: 0;
+  border-width: 0;
+  max-height: 230px;
+  overflow: overlay;
 }
 .current-list {
   padding: 5px 10px;
@@ -258,13 +318,7 @@ export default {
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    from(#21ba45),
-    to(#2bc54f)
-  );
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#21ba45), to(#2bc54f));
   animation-timing-function: ease-in-out;
   animation-name: breathe;
   animation-duration: 1000ms;
@@ -273,13 +327,7 @@ export default {
 }
 .breathe-btn.active {
   border-color: #db2828;
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    from(#db2828),
-    to(#f70b0b)
-  );
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#db2828), to(#f70b0b));
   animation-name: breatheAction;
   animation-duration: 500ms;
 }
@@ -358,7 +406,6 @@ export default {
 .wave.ripple.danger .circle {
   // border-color: red;
   background: radial-gradient(white, #e84747);
-  
 }
 .wave.ripple.warning {
   color: orange;
@@ -377,8 +424,6 @@ export default {
     transform: scale(1);
   }
 }
-
-
 .phoneBtn {
   left: 0;
   right: 0;
@@ -395,7 +440,7 @@ export default {
 }
 .icon-tel-consult:before {
   position: absolute;
-  content: "TEL";
+  content: 'TEL';
   top: 0;
   left: -20px;
   font-size: 12px;
@@ -407,14 +452,18 @@ export default {
   animation: msClock 1.2s linear infinite;
 }
 @keyframes msClock {
-  0%,90%,100% {
+  0%,
+  90%,
+  100% {
     transform: rotate(0) scale(1);
   }
-  20%,40% {
+  20%,
+  40% {
     transform: rotate(-15deg) scale(1.1);
   }
-  30%,50% {
-  transform: rotate(15deg) scale(1.1);
+  30%,
+  50% {
+    transform: rotate(15deg) scale(1.1);
   }
 }
 </style>
