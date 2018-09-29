@@ -2,7 +2,7 @@ FROM nginx:latest
 
 RUN rm /usr/share/nginx/html/50x.html
 
-COPY ./dist/spa-mat/ /usr/share/nginx/html/
+COPY ./dist/spa-mat /usr/share/nginx/html/
 COPY ./build/nginx/conf.d/default.conf /etc/nginx/conf.d
 
 EXPOSE 80
