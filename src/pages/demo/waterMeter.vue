@@ -81,7 +81,15 @@
       span(class="chart-span") 月份读表图
       canvas(id="myChart" height="200" style="width: 100%")
     .col-12(v-show="look")
-      q-table(:data="InfoList" :columns="columns" row-key="name" hide-bottom)
+      .row.listBox
+        .col-2(class="listBox_title text-grey-7") 序号
+        .col-3(class="listBox_title text-grey-7") 读数
+        .col-7(class="listBox_title text-grey-7") 时间
+        template(v-for="item in InfoList")
+          .col-2(class="listBox_content") {{item.id}}
+          .col-3(class="listBox_content") {{item.value}}
+          .col-7(class="listBox_content") {{item.cretime}}
+      //- q-table(:data="InfoList" :columns="columns" row-key="name" hide-bottom)
     q-btn(class="fixed" style="right: 18px; top: 18px" :loading="loading" round icon="refresh" color="primary" @click="refreshChange")
     q-btn(round color="primary" class="fixed" icon="remove_red_eye" style="right: 18px; bottom: 18px" @click="look = !look")
 </template>
@@ -123,7 +131,7 @@ export default {
           sortable: false
         }
       ],
-      look: false,
+      look: true,
       showing: false,
       InfoList: [],
       loading: false,
@@ -368,7 +376,7 @@ export default {
               this.theMonth.msgTime = this.Timestamps(item.cretime, true)
             }
           })
-          console.log(this.InfoList, 'infolist,infolist')
+          console.log(this.InfoList, this.InfoList.length, 'infolist,infolist')
           this.getMInfoList() // 获取历史月份数据
         })
         .catch(error => {
@@ -486,6 +494,18 @@ export default {
   padding-bottom: 15px;
   font-size: 12px;
   line-height: 30px;
+}
+.listBox {
+  padding: 0 8px;
+  font-size: 12px;
+  .listBox_title {
+    line-height: 40px;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+  }
+  .listBox_content {
+    line-height: 30px;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+  }
 }
 </style>
 
