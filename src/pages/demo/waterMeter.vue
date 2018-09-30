@@ -9,13 +9,6 @@
         div(class="row items-center text-blue-grey-9" style="font-size: 14px;")
           |累计用水：{{theMonth.allVal}}
           |<span style="padding-left: 5px; font-size: 12px;">m³</span>
-      //- q-card-title
-        | {{Wdata.name}}
-        div(slot="right" class="row items-center")
-          q-icon(name="today")
-          span(style="padding-left: 5px") {{theMonth.cretime}}
-        //- .col-12(style="font-size: 14px;")
-          |{{Wdata.code}}
       q-card-main
         .row
           .col-7
@@ -157,6 +150,10 @@ export default {
         grade: 1
       },
       waterData: [],
+      query: {
+        imei: '',
+        name: 'water_load'
+      },
       // mchartData: [{
       //   money: 2,
       //   degree: 5
@@ -195,6 +192,7 @@ export default {
     if (this.$route.params.device !== undefined) this.Wdata = this.$route.params.device
     this.getInfoList()
     this.wsMonitor(this.$route.params.imei)
+    this.query.imei = this.$route.params.imei
   },
   mounted() {
     document.title = 'NB-IoT · 物联网水表'
@@ -337,10 +335,10 @@ export default {
         date = new Date(tempTime * 1000)
         let Y = date.getFullYear() + '-'
         let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-        let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+        let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
         let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
         let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
-        let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+        let s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
         return Y + M + D + h + m + s
       } else {
         date = new Date(time)
@@ -357,13 +355,11 @@ export default {
       })
     },
     getInfoList() {
-      getInfoList({
-        imei: this.$route.params.imei,
-        name: 'water_load',
-        size: 24
-      })
+      this.query.size = 24
+      getInfoList(this.query)
         .then(res => {
           let data = res.data
+          this.InfoList = data
           data.forEach((item, i) => {
             if (i === 0) {
               this.theMonth = item
@@ -372,7 +368,7 @@ export default {
               this.theMonth.msgTime = this.Timestamps(item.cretime, true)
             }
           })
-          this.InfoList = data
+          console.log(this.InfoList, 'infolist,infolist')
           this.getMInfoList() // 获取历史月份数据
         })
         .catch(error => {
@@ -384,11 +380,8 @@ export default {
         })
     },
     getMInfoList() {
-      getMInfoList({
-        imei: this.$route.params.imei,
-        name: 'water_load',
-        size: 11
-      })
+      this.query.size = 11
+      getMInfoList(this.query)
         .then(res => {
           let data = res.data.reverse()
           this.chartData = []

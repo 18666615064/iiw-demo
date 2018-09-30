@@ -8,10 +8,11 @@
             |&nbsp;欢迎使用示例系统
         div(style="max-width: 600px;margin: 20px auto;")
           div
-            q-collapsible(icon="fas fa-edit" label="模板编辑器" :popup="true" group="item" @show="openEditor")
-            q-collapsible(icon="fas fa-edit" label="示例中心" :popup="true" group="item" @show="openDemo")
-            q-collapsible(icon="fas fa-edit" label="水表" :popup="true" group="item" @show="openwater")
-            q-collapsible(icon="fas fa-edit" label="烟感" :popup="true" group="item" @show="opensmoke")
+            q-collapsible(icon="fas fa-edit" label="模板编辑器" :popup="true" group="item" @show="open('Editor')")
+            q-collapsible(icon="fas fa-edit" label="示例中心" :popup="true" group="item" @show="open('Demo')")
+            q-collapsible(icon="fas fa-edit" label="水表" :popup="true" group="item" @show="open('Water')")
+            q-collapsible(icon="fas fa-edit" label="烟感" :popup="true" group="item" @show="open('Smoke')")
+            q-collapsible(icon="fas fa-edit" label="NB-IoT 信号探测仪" :popup="true" group="item" @show="open('Detection')")
             q-collapsible(icon="fas fa-list" label="支持设备" :popup="true" group="item")
               q-list(hightlight inset-separator no-border)
                 q-item(v-for="item in product" :key="item.id")
@@ -57,19 +58,31 @@ export default {
     }
   },
   methods: {
+    open(name) {
+      switch (name) {
+        case 'Editor':
+          this.$router.push({ path: '/code' })
+          break
+        case 'Demo':
+          this.$router.push({ path: '/smoke' })
+          break
+        case 'Water':
+          this.$router.push({ path: '/loading/869664030006491' })
+          break
+        case 'Smoke':
+          this.$router.push({ path: '/loading/869664030000510' })
+          break
+        case 'Detection':
+          // this.$router.push({ path: '/detection' })
+          this.$router.push({ path: '/loading/868194030006524' })
+          break
+        default:
+          break
+      }
+    },
     openEditor(item) {
       this.$store.commit('code/setEditingItem', item)
       this.$router.push({ path: '/code' })
-    },
-    openDemo() {
-      // this.$router.push({ name: 'waterMeter' })
-      this.$router.push({ path: '/smoke' })
-    },
-    openwater() {
-      this.$router.push({ path: '/loading/869664030006491' })
-    },
-    opensmoke() {
-      this.$router.push({ path: '/loading/869664030000510' })
     }
   }
 }

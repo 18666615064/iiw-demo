@@ -21,6 +21,9 @@ export default {
   created() {
     this.getInfoImei()
   },
+  mounted() {
+    document.title = '加载中...'
+  },
   methods: {
     getInfoImei() {
       getInfoImei(this.$route.params.id).then(res => {
@@ -36,6 +39,9 @@ export default {
               break
             case 'NB-Smoke':
               this.$router.push({ name: 'smoke', params: data })
+              break
+            case 'NB-Detector':
+              this.$router.push({ name: 'detection', params: data })
               break
             default:
               this.msg = '找不到改设备'

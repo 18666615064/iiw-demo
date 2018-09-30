@@ -43,6 +43,11 @@ const routes = [{
   name: 'smoke',
   component: () =>
     import('pages/demo/smoke.vue')
+}, {
+  path: '/detection',
+  name: 'detection',
+  component: () =>
+    import('pages/demo/detection.vue')
 }]
 // Always leave this as last one
 if (process.env.MODE !== 'ssr') {
