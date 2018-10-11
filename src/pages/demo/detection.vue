@@ -1,53 +1,42 @@
 <template lang="pug">
   .detecitonBox
-    .detecitonBox_title 更新时间： {{ data.cretime }}
+    .detecitonBox_title 更新时间： {{ cretime }}
+      span(style="float: right")
+        q-btn(round size="sm" color="cyan-6" icon="history" @click="modelChange")
     .row
       .col-12
-        .listBox.shadow-2
+        .listBox
           .row
             .col-2.iconBox
               i(class="iconfont icon-gonglv text-cyan-6")
             .col-5.contentBox
               p(class="title") RX信号强度水平
-              p(class="content")
-              |{{ data.rxlev }}<span class="unit">dBm</span>
+              ICountUp(:startVal="startVal" :endVal="endValRX" :decimals="decimals" :duration="duration" :options="options")
             .col-5.commentBox
               p -110 信号最差
               p 信号值越大信号越好
-      .col-12
-        .listBox.shadow-2
-          .row
-            .col-2.iconBox
-              i(class="iconfont icon-cuowu text-red-7")
-            .col-5.contentBox
-              p(class="title") 误码率
-              p(class="content")
-              |{{ data.ber }}<span class="unit">%</span>
-      .col-12
-        .listBox.shadow-2
+          q-card-separator.separator
           .row
             .col-2.iconBox
               i(class="iconfont icon-zhiliang text-green-5")
             .col-5.contentBox
               p(class="title") 信号接收质量
-              p(class="content")
-              |{{ data.rsrq }}
+              ICountUp(:startVal="startVal" :endVal="endValrsrq" :decimals="decimals" :duration="duration" :options="options")
             .col-5.commentBox
               p 质量范围：-3 ~ -19.5
               p 值越大，接收质量越好
-      .col-12
-        .listBox.shadow-2
+          q-card-separator.separator
           .row
             .col-2.iconBox
               i(class="iconfont icon-wuma text-light-blue-10")
             .col-5.contentBox
               p(class="title") 信号接收功率
-              p(class="content")
-              |{{ data.rsrp }}<span class="unit">dBm</span>
+              ICountUp(:startVal="startVal" :endVal="endValdBm" :decimals="decimals" :duration="duration" :options="options")
+              span(class="unit") dBm
             .col-5.commentBox(@click="showing = true")
-              p {{ data.rsrp > -65 ? '非常好' : (data.rsrp < -65 && data.rsrp > -75) ? '好' : (data.rsrp < -75 && data.rsrp > -85) ? '较好' : (data.rsrp < -85 && data.rsrp > -95) ? '一般' : (data.rsrp < -95 && data.rsrp > -105) ? '差' : '较差'}}
+              p {{ endValdBm > -65 ? '非常好' : (endValdBm < -65 && endValdBm > -75) ? '好' : (endValdBm < -75 && endValdBm > -85) ? '较好' : (endValdBm < -85 && endValdBm > -95) ? '一般' : (endValdBm < -95 && endValdBm > -105) ? '差' : '较差'}}
               p
-                |信号等级 {{ data.rsrp > -65 ? '1' : (data.rsrp < -65 && data.rsrp > -75) ? '2' : (data.rsrp < -75 && data.rsrp > -85) ? '3' : (data.rsrp < -85 && data.rsrp > -95) ? '4' : (data.rsrp < -95 && data.rsrp > -105) ? '5' : '6'}}
+                |信号等级 {{ endValdBm > -65 ? '1' : (endValdBm < -65 && endValdBm > -75) ? '2' : (endValdBm < -75 && endValdBm > -85) ? '3' : (endValdBm < -85 && endValdBm > -95) ? '4' : (endValdBm < -95 && endValdBm > -105) ? '5' : '6'}}
                 q-icon(name="help")
               q-modal(v-model="showing" position="top")
                   q-card-main
@@ -73,89 +62,243 @@
                         |<span class="span_left">较差</span>---- 信号强度 6
                       .col-5 -105 < Rx
       .col-12
-        .listBox.shadow-2
+        .listBox
+          .row(style="text-align: center")
+            .col-4.border-r
+              .contentBox
+                p(class="title") 附网时间
+                ICountUp(:startVal="startVal" :endVal="endValF" :decimals="decimals" :duration="duration" :options="options")
+                span(class="unit") s
+            .col-4.border-r
+              .contentBox
+                p(class="title") 登陆时间
+                ICountUp(:startVal="startVal" :endVal="AendValD" :decimals="decimals" :duration="duration" :options="options")
+                span(class="unit") s
+            .col-4
+              .contentBox
+                p(class="title") 上报时间
+                ICountUp(:startVal="startVal" :endVal="AendValZ" :decimals="decimals" :duration="duration" :options="options")
+                span(class="unit") s
+      .col-6
+        .listBox(style="margin-right: 5px")
           .row
-            .col-2.iconBox
-              i(class="iconfont icon-duration text-blue-grey-4")
-            .col-8.contentBox
-              p(class="title") 开机到附网时长
-              p(class="content")
-              |{{ data.nettime }}<span class="unit">s</span>
+            .col-12.knob
+              .contentBox
+                p(class="title") 误码率
+                q-knob(v-model="endValW" size="7rem" :min="min" :max="max" :color="endValW === 0 ? 'green-6' : 'red-6'" readonly)
+                  |{{endValW}}%
+      .col-6
+        .listBox(style="margin-left: 5px")
+          .row
+            .col-12.knob
+              .contentBox
+                p(class="title") 地址
+                p(class="content")
+                  | 广州市天河区东圃奥体路818号
+                p(class="title knob-title") 坐标
+                p(class="content") lng：113.416634
+                p(class="content") lat：23.145874
       .col-12
-        .listBox.shadow-2
-          .row
-            .col-2.iconBox
-              i(class="iconfont icon-duration text-brown-5")
-            .col-8.contentBox
-              p(class="title") 开机到登陆时长
-              p(class="content")
-              |{{ data.logintime }}<span class="unit">s</span>
-      .col-12.listBox.shadow-2
-        .row
-          .col-2.iconBox
-            i(class="iconfont icon-duration")
-          .col-8.contentBox
-            p(class="title") 开机到最后数据上报时长
-            p(class="content")
-            |{{ data.uploadtime }}<span class="unit">s</span>
+        .listBox
+          .mapBox
+            baidu-map(ref="map" :center="center" :zoom="zoom" @ready="initMap" style="width: 100%; height: 300px;")
+              .geolocation(@click="locateChange")
+                q-icon(name="my_location" color="grey-7")
+    q-modal(v-model="model")
+        q-btn(round class="fixed" style="right: 10px; top: 10px" size="sm" color="red-6" icon="clear" @click="modelChange")
+        q-card-main
+          q-item-tile(style="font-size: 16px;") 历史检测记录
+        q-table(:data="tableData" :columns="columns" :pagination.sync="serverPagination" row-key="name" hide-bottom)
+        .chartBox
+          canvas(id="mountNode" height="200" style="width: 100%")
+    Loading(ref="loading")
 </template>
 
 <script>
-import { getInfoList } from '@/api/meter'
+import Loading from '@/components/loading'
+import ICountUp from 'vue-countup-v2'
+import { getInfoList, getGroupList } from '@/api/meter'
+const F2 = require('@antv/f2')
 export default {
+  components: {
+    ICountUp,
+    Loading
+  },
+  name: 'detection',
   data() {
     return {
+      model: false,
+      iemi: null,
       showing: false,
-      data: {
-        rxlev: '',
-        ber: '',
-        rsrq: '',
-        rsrp: '',
-        nettime: '',
-        logintime: '',
-        uploadtime: '',
-        cretime: ''
-      }
+      decimals: 0,
+      duration: 2.5,
+      options: {
+        useEasing: true,
+        useGrouping: true,
+        separator: ',',
+        decimal: '.',
+        prefix: '',
+        suffix: ''
+      },
+      startVal: 0,
+      endValRX: 0,
+      endValW: 0,
+      endValrsrq: 0,
+      endValdBm: 0,
+      endValF: 0,
+      endValD: 0,
+      endValZ: 0,
+      cretime: '',
+      min: 0,
+      max: 100,
+      map: null, // 地图
+      center: {
+        lng: 113.412299,
+        lat: 23.158603
+      },
+      zoom: 19,
+      marker: null,
+      address: '',
+      checked: true,
+      iconUrl: {
+        error: require('../../assets/images/detection-e.png'),
+        normal: require('../../assets/images/detection-n.png')
+      },
+      columns: [
+        {
+          name: 'id',
+          required: true,
+          label: '序号',
+          align: 'left',
+          field: 'id',
+          sortable: true
+        },
+        {
+          name: 'rsrp',
+          required: true,
+          label: '信号接收功率',
+          align: 'left',
+          field: 'rsrp',
+          sortable: true
+        },
+        {
+          name: 'ber',
+          required: true,
+          label: '误码率',
+          align: 'left',
+          field: 'ber',
+          sortable: true
+        },
+        {
+          name: 'rsrq',
+          required: true,
+          label: '信号质量',
+          align: 'left',
+          field: 'rsrq',
+          sortable: true
+        },
+        {
+          name: 'rxlev',
+          required: true,
+          label: 'RX信号强度水平',
+          align: 'left',
+          field: 'rxlev',
+          sortable: true
+        },
+        {
+          name: 'nettime',
+          required: true,
+          label: '附网时间',
+          align: 'left',
+          field: 'nettime',
+          sortable: true
+        },
+        {
+          name: 'logintime',
+          required: true,
+          label: '登陆时间',
+          align: 'left',
+          field: 'logintime',
+          sortable: true
+        },
+        {
+          name: 'uploadtime',
+          required: true,
+          label: '上报时间',
+          align: 'left',
+          field: 'uploadtime',
+          sortable: true
+        },
+        {
+          name: 'time',
+          required: true,
+          label: '更新日期',
+          align: 'left',
+          field: 'time',
+          sortable: true
+        }
+      ],
+      serverPagination: {
+        page: 1,
+        rowsNumber: 10
+      },
+      tableData: [],
+      chartData: []
+    }
+  },
+  computed: {
+    AendValD: function() {
+      return parseInt(this.endValD) - parseInt(this.endValF)
+    },
+    AendValZ: function() {
+      return parseInt(this.endValZ) - parseInt(this.endValD)
     }
   },
   created() {
-    this.wsMonitor(this.$route.params.imei)
+    this.iemi = window.sessionStorage.getItem('imei')
+    this.wsMonitor(this.iemi)
     this.initGet()
   },
   mounted() {
     document.title = 'NB-IoT · 信号探测仪'
+    // setTimeout(() => {
+    //   console.log('222')
+    //   this.$refs.loading.hide()
+    // }, 3000)
+    // setTimeout(() => {
+    //   this.$refs.loading.show()
+    // }, 5000)
   },
   methods: {
     wsMonitor(imei) {
-      // var es = new EventSource(`/server/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
-      var es = new EventSource(`/admin/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`)
+      // var es = new EventSource(`/server/es/listen?events=${encodeURI('['dataLog']')}&imei=${imei}`)
+      var es = new EventSource(
+        `/admin/devicecenter/es/listen?events=${encodeURI('["dataLog"]')}&imei=${imei}`
+      )
       es.addEventListener('dataLog', e => {
-        console.log(e, 'ws')
         let data = JSON.parse(e.data)
-        this.data.cretime = this.Timestamps(data.cretime)
-        console.log(data, 'data')
-        console.log(this.Timestamps(data.cretime), 'time')
+        this.cretime = this.Timestamps(data.cretime)
         switch (data.name) {
           case 'rxlev':
-            this.data.rxlev = data.value
+            this.endValRX = Number(data.value)
             break
           case 'ber':
-            this.data.ber = data.value
+            this.endValW = Number(data.value)
             break
           case 'rsrq':
-            this.data.rsrq = data.value
+            this.endValrsrq = Number(data.value)
             break
           case 'rsrp':
-            this.data.rsrp = data.value
+            this.endValdBm = Number(data.value)
             break
           case 'nettime':
-            this.data.nettime = data.value
+            this.endValF = Number(data.value)
             break
           case 'logintime':
-            this.data.logintime = data.value
+            this.endValD = Number(data.value)
             break
           case 'uploadtime':
-            this.data.uploadtime = data.value
+            this.endValZ = Number(data.value)
             break
           default:
             break
@@ -170,129 +313,413 @@ export default {
       this.getInfoList('nettime')
       this.getInfoList('logintime')
       this.getInfoList('uploadtime')
+      this.getGroupList()
+    },
+    modelChange() {
+      this.model = !this.model
+      if (this.model) {
+        let dom = document.getElementById('mountNode')
+        if (dom) {
+          dom.insertAdjacentHTML('afterend', '\n  <div id="tooltip" class="f2-tooltip">\n    <span> </span>\n    <span> </span>\n  </div>\n')
+        }
+        setTimeout(() => {
+          this.initChart()
+        }, 300)
+      }
     },
     getInfoList(type) {
       getInfoList({
-        imei: this.$route.params.imei,
+        imei: this.iemi,
         name: type,
         size: 5
-      }).then(res => {
-        let data = res.data
-        switch (type) {
-          case 'rxlev':
-            this.data.rxlev = data[0].value
-            break
-          case 'ber':
-            this.data.ber = data[0].value
-            break
-          case 'rsrq':
-            this.data.rsrq = data[0].value
-            break
-          case 'rsrp':
-            this.data.rsrp = data[0].value
-            break
-          case 'nettime':
-            this.data.nettime = data[0].value
-            break
-          case 'logintime':
-            this.data.logintime = data[0].value
-            break
-          case 'uploadtime':
-            this.data.uploadtime = data[0].value
-            this.data.cretime = data[0].cretime
-            break
-          default:
-            break
-        }
-      }).catch(error => {
-        this.$q.notify({
-          message: error.message,
-          type: 'negative',
-          position: 'top-left'
-        })
       })
+        .then(res => {
+          let data = res.data
+          switch (type) {
+            case 'rxlev':
+              this.endValRX = Number(data[0].value)
+              break
+            case 'ber':
+              this.endValW = Number(data[0].value)
+              break
+            case 'rsrq':
+              this.endValrsrq = Number(data[0].value)
+              break
+            case 'rsrp':
+              this.endValdBm = Number(data[0].value)
+              break
+            case 'nettime':
+              this.endValF = Number(data[0].value)
+              break
+            case 'logintime':
+              this.endValD = Number(data[0].value)
+              break
+            case 'uploadtime':
+              this.endValZ = Number(data[0].value)
+              this.cretime = data[0].cretime
+              break
+            default:
+              break
+          }
+        })
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            type: 'negative',
+            position: 'top-left'
+          })
+        })
     },
-    Timestamps(time) {
+    getGroupList() {
+      getGroupList({
+        imei: this.iemi,
+        name: 'uploadtime',
+        size: 15
+      })
+        .then(res => {
+          let data = res.data
+          let list = []
+          let clist = []
+          data.forEach((item, i) => {
+            if (Object.keys(item).length === 9) {
+              let temp = {
+                id: i,
+                ber: '----',
+                rsrp: '----',
+                rsrq: '----',
+                rxlev: '----',
+                logintime: '----',
+                nettime: '----',
+                uploadtime: '----',
+                time: '----'
+              }
+              if (item.ber) {
+                temp.ber = item.ber.value
+              }
+              if (item.rsrp) {
+                temp.rsrp = item.rsrp.value
+              }
+              if (item.rsrq) {
+                temp.rsrq = item.rsrq.value
+              }
+              if (item.rxlev) {
+                temp.rxlev = item.rxlev.value
+              }
+              if (item.nettime) {
+                temp.nettime = item.nettime.value
+              }
+              if (item.logintime) {
+                temp.logintime =
+                  parseInt(item.logintime.value) - parseInt(item.nettime.value)
+              }
+              if (item.uploadtime) {
+                temp.uploadtime =
+                  parseInt(item.uploadtime.value) -
+                  parseInt(item.logintime.value)
+                temp.time = item.uploadtime.cretimestr
+              }
+              let ctempber = {
+                date: item.uploadtime.cretimestr,
+                value: Number(item.rxlev.value),
+                type: 'RX信号强度'
+              }
+              let ctemprsrp = {
+                date: item.uploadtime.cretimestr,
+                value: Number(item.rsrp.value),
+                type: '信号接收功率'
+              }
+              // let ctemprsrq = {
+              //   date: item.uploadtime.cretimestr,
+              //   value: Number(item.rsrq.value),
+              //   type: '信号质量'
+              // }
+              clist.push(ctempber)
+              clist.push(ctemprsrp)
+              // clist.push(ctemprsrq)
+              list.push(temp)
+            }
+          })
+          this.chartData = clist
+          this.tableData = list
+        })
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            type: 'negative',
+            position: 'top-left'
+          })
+        })
+    },
+    Timestamps(time, show) {
       // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
       let date = new Date(time)
       let Y = date.getFullYear() + '-'
-      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-      let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
-      let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
-      let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
-      let s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
-      return Y + M + D + h + m + s
+      let M =
+        (date.getMonth() + 1 < 10
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1) + '-'
+      let D =
+        (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+      let d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+      let h =
+        (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+      let m =
+        (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) +
+        ':'
+      let s =
+        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+      if (show) {
+        return Y + M + d
+      } else {
+        return Y + M + D + h + m + s
+      }
+    },
+    initChart() {
+      var chart = new F2.Chart({
+        id: 'mountNode',
+        pixelRatio: window.devicePixelRatio
+      })
+      chart.source(this.chartData)
+      chart.scale('date', {
+        type: 'timeCat',
+        tickCount: 3
+      })
+      // chart.scale('value', {
+      //   tickCount: 5
+      // })
+      chart.axis('date', {
+        label: function label(text, index, total) {
+          // 只显示每一年的第一天
+          var textCfg = {}
+          if (index === 0) {
+            textCfg.textAlign = 'left'
+          } else if (index === total - 1) {
+            textCfg.textAlign = 'right'
+          }
+          return textCfg
+        }
+      })
+      chart.tooltip({
+        custom: true, // 自定义 tooltip 内容框
+        showCrosshairs: true,
+        onChange: function onChange(obj) {
+          let legend = chart.get('legendController').legends.top[0]
+          let tooltipItems = obj.items
+          let legendItems = legend.items
+          let map = {}
+          legendItems.map(function(item) {
+            map[item.name] = item
+          })
+          tooltipItems.map(function(item) {
+            let name = item.name
+            let value = item.value
+            if (map[name]) {
+              map[name].value = value
+            }
+          })
+          legend.setItems(tooltipItems)
+          let tooltipEl = document.getElementById('tooltip')
+          if (tooltipEl) {
+            let currentData = obj.items[0]
+            tooltipEl.innerHTML = `<span>${currentData.origin.date}</span>`
+            tooltipEl.style.cssText = 'opacity: 1'
+          }
+        },
+        onHide: function onHide(obj) {
+          let tooltipEl = document.getElementById('tooltip')
+          if (tooltipEl) {
+            tooltipEl.style.cssText = 'opacity: 0'
+          }
+          let legend = chart.get('legendController').legends.top[0]
+          let legendItems = legend.items
+          legendItems.map((item) => {
+            delete item.value
+          })
+          legend.setItems(chart.getLegendItems().country)
+        }
+      })
+      chart
+        .line()
+        .position('date*value')
+        .color('type')
+      chart.render()
+    },
+    /* eslint-disable */
+    initMap({ BMap, map }) {
+      this.map = map
+      this.map.centerAndZoom(new BMap.Point(113.413139, 23.158125), 19)
+      let point = new BMap.Point(113.413139, 23.158125)
+      let iconurl = null
+      if (this.checked) {
+        iconurl = this.iconUrl.normal
+      } else {
+        iconurl = this.iconUrl.error
+      }
+      let icon = new BMap.Icon(iconurl, new BMap.Size(30, 38))
+      let marker = new BMap.Marker(point, { icon: icon })
+      map.addOverlay(marker)
+      this.marker = marker
+
+      let myGeo = new BMap.Geocoder()
+      myGeo.getLocation(point, res => {
+        this.address = res.address
+      })
+      this.map.addEventListener('click', e => {
+        console.log(e, 'click')
+      })
+    },
+    locateChange(e) {
+      this.map.centerAndZoom(new BMap.Point(113.413139, 23.158125), 19)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .detecitonBox {
-    padding: 10px;
-    height: 100vh;
-    background: linear-gradient(-48deg, #8888ce, #43e6d4);
-    .listBox {
-      margin-top: 10px;
-      padding: 10px 0;
-      background-color: #fff;
-      border-radius: 8px;
-      .iconBox {
-        text-align: center;
-        line-height: 42px;
-      }
-      .contentBox {
-        color: #233A4A;
-        p {
-          margin-bottom: 0;
-        }
-        .title {
-          font-size: 13px;
-          padding-bottom: 10px;
-        }
-        .content {
-          font-size: 18px;
-        }
-      }
-      .commentBox {
-        padding-right: 10px;
-        text-align: right;
-        color: #ababab;
-        p {
-          margin-bottom: 0;
-          font-size: 12px;
-          line-height: 20px;
-        }
-        .q-icon {
-          padding-left: 4px;
-          font-size: 14px;
-          vertical-align: sub;
-        }
-      }
-      .col-4 {
-        color: #899CF4;
-      }
-    }
-  }
-  .detecitonBox_title {
-    color: #fff;
-  }
-  .unit {
-    padding-left: 3px;
-    font-size: 12px;
-  }
-  .iconfont {
-    font-size: 30px;
-  }
-  .gradient_popover {
-    padding: 0 15px;
-    padding-bottom: 15px;
-    font-size: 12px;
-    line-height: 30px;
-    .span_left {
-      display: inline-block;
-      width: 45px;
+.detecitonBox {
+  position: relative;
+  padding: 10px;
+  background: linear-gradient(-48deg, #d0d2da, #3190ff);
+  .listBox {
+    margin-top: 10px;
+    padding: 10px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    .iconBox {
       text-align: center;
+      line-height: 42px;
+    }
+    .contentBox {
+      color: #233a4a;
+      p {
+        margin-bottom: 0;
+      }
+      .title {
+        font-size: 13px;
+        padding-bottom: 10px;
+      }
+      .content {
+        text-align: left;
+        font-size: 14px;
+      }
+    }
+    .commentBox {
+      padding-right: 10px;
+      text-align: right;
+      color: #ababab;
+      p {
+        margin-bottom: 0;
+        font-size: 12px;
+        line-height: 20px;
+      }
+      .q-icon {
+        padding-left: 4px;
+        font-size: 14px;
+        vertical-align: sub;
+      }
+    }
+    .col-4 {
+      color: #899cf4;
     }
   }
+}
+.detecitonBox_title {
+  padding-bottom: 26px;
+  font-size: 14px;
+  color: #fff;
+}
+.unit {
+  padding-left: 3px;
+  font-size: 12px;
+}
+.iconfont {
+  font-size: 30px;
+}
+.gradient_popover {
+  padding: 0 15px;
+  padding-bottom: 15px;
+  font-size: 12px;
+  line-height: 30px;
+  .span_left {
+    display: inline-block;
+    width: 45px;
+    text-align: center;
+  }
+}
+
+.separator {
+  margin: 6px 0;
+  margin-left: 16.67%;
+  width: 83.33%;
+}
+.border-r {
+  border-right: 1px dotted #e5e5e5;
+}
+.knob {
+  height: 140px;
+  text-align: center;
+  .contentBox {
+    padding: 0 10px;
+  }
+  .title {
+    text-align: left;
+  }
+}
+.knob-title {
+  padding: 10px 0;
+}
+.col-12 {
+  z-index: 1;
+}
+.mapBox {
+  position: relative;
+  padding: 0 10px;
+  overflow: hidden;
+  .geolocation {
+    position: absolute;
+    right: 15px;
+    bottom: 12px;
+    width: 32px;
+    height: 32px;
+    line-height: 27px;
+    text-align: center;
+    font-size: 19px;
+    background-color: #fff;
+    border: 1px solid #d9d7d5;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+}
+
+</style>
+
+<style lang="less">
+.anchorBL {
+  display: none;
+}
+.chartBox {
+  position: relative;
+  padding-top: 15px;
+  .f2-tooltip {
+    // -moz-box-shadow: 1px 1px 0.5px 0.5px rgba(0, 0, 0, 0.3);
+    // -webkit-box-shadow: 1px 1px 0.5px 0.5px rgba(0, 0, 0, 0.3);
+    // box-shadow: 1px 1px 0.5px 0.5px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    left: 10px;
+    z-index: 99;
+    color: #000;
+    padding: 5px;
+    border-radius: 3px;
+    text-align: center;
+    width: 120px;
+    opacity: 0;
+  }
+  .f2-tooltip span:nth-child(1) {
+    font-size: 11px !important;
+  }
+  .f2-tooltip span:nth-child(2) {
+    font-size: 13px !important;
+  }
+}
 </style>

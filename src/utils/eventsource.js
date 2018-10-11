@@ -1,6 +1,5 @@
 export default {
   install(Vue, connection, opts) {
-    console.log(connection, '1111111111111111111111111')
     let onlist = {}
     let createConnection = function() {
       if (Vue.prototype.$socket) {

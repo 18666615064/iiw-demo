@@ -1,6 +1,6 @@
 const path = require('path')
 // Configuration for your app
-module.exports = function (ctx) {
+module.exports = function(ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: ['i18n', 'axios', 'codemirror', 'BaiduMap'],
@@ -34,7 +34,6 @@ module.exports = function (ctx) {
           test: /\.less$/,
           loader: 'less-loader'
         })
-        cfg.resolve.alias.vue = 'vue/dist/vue.esm.js'
       },
       chainWebpack(chain) {
         chain.resolve.alias
@@ -50,9 +49,9 @@ module.exports = function (ctx) {
       // proxy: {
       //   // 将所有以/api开头的请求代理到jsonplaceholder
       //   '/server': {
-      //     // target: 'http://api.iotdev.top/admin/devicecenter',
-      //     target: 'http://1u5517x920.imwork.net:12028',
-      //     // target: 'http://192.168.20.236:8807',
+      //     target: 'http://api.iotdev.top/admin/devicecenter',
+      //     // target: 'http://1u5517x920.imwork.net:12028',
+      //     // target: 'http://192.168.20.240:8807',
       //     changeOrigin: true,
       //     pathRewrite: {
       //       '^/server': ''
@@ -62,7 +61,7 @@ module.exports = function (ctx) {
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
-      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction', 'QTable', 'QTh', 'QTr', 'QTd', 'QToggle', 'QProgress', 'QModal'],
+      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction', 'QTable', 'QTh', 'QTr', 'QTd', 'QToggle', 'QProgress', 'QModal', 'QKnob', 'QTab', 'QTabPane'],
       directives: ['Ripple', 'CloseOverlay'],
       // Quasar plugins
       plugins: ['Notify', 'Dialog'],

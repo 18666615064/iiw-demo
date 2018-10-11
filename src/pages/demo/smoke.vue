@@ -1,26 +1,22 @@
 <template lang="pug">
-  .smoke-outer(:style="this.infoData.length < 4 ? 'height: 100vh' : ''")
+  .smoke-outer(style="height: 100vh")
     .row
       .col-12
         div(@click="opened = true")
-          .mapBtn
-            q-icon(v-if="checked" name="place" color="blue-6")
-            i(v-else class="iconfont icon-huo text-red-9")
-          span(class="imgTitle")
-            |设备状态：<span :class="checked ? 'text-light-green-6' : 'text-deep-orange-13'">{{ checked ? '正常' : '告警' }}</span>
-          q-card-media(class="imgBox" style="overflow: inherit;")
-            .wave.ripple.danger(v-show="checked ? '' : 'active'")
-              .circle
-              .circle
-              //- .circle
-            img(src="../../assets/images/smoke.png")
-            .breathe-btn(:class="checked ? '' : 'active'")
+          .aperture
+            .mapBtn
+              q-icon(v-if="checked" name="place" color="blue-6")
+              i(v-else class="iconfont icon-huo text-red-9")
+            span(class="imgTitle")
+              |设备状态：<span :class="checked ? 'text-light-green-6' : 'text-deep-orange-13'">{{ checked ? '正常' : '告警' }}</span>
+            q-card-media(class="imgBox" style="overflow: inherit;")
+              //- .wave.ripple.danger(v-show="checked ? '' : 'active'")
+                .circle
+                .circle
+                //- .circle
+              img(src="../../assets/images/smoke.png")
+              .breathe-btn(:class="checked ? '' : 'active'")
           q-card-separator
-          //- .current-list
-            i(class="iconfont icon-kongzhi text-blue-grey-6")
-            | 设备调试
-            .current-list_right
-              q-toggle(v-model="checked" @onchage="toggleChange")
           .current-list
             i(class="iconfont icon-dianliang text-light-green-6")
             | 剩余电量
@@ -31,52 +27,41 @@
             i(class="iconfont icon-shijian text-blue-7")
             | {{ checked ? '自检时间' : '告警时间' }}
             .current-list_right
-              //- q-icon(name="today")
               span(style="padding-left: 5px") {{nowInfo.cretime}}
-      .col-12(style="margin-bottom: 10px")
+      .col-12(style="margin-bottom: 10px" class="smoke-tabs")
         div
-          .list_title 历史告警记录
-          q-list(inset-separator class="list-reset")
-            //- q-item
-              q-item-side(class="text-light-green-6")
-                i(class="iconfont icon-wuxianyangan")
-              q-item-main(sublabel-lines="1" class="text-light-green-6") 正常
-              q-item-side(right)
-                q-item-tile 2018-09-27 13:15:00
-            //- q-item
-              q-item-side(class="text-deep-orange-13")
-                i(class="iconfont icon-wuxianyangan")
-              q-item-main(sublabel-lines="1" class="text-deep-orange-13") 告警
-              q-item-side(right)
-                q-item-tile 2018-09-27 13:15:00
-            template(v-for="(item, index) in infoData")
-              q-item(:key="index")
-                q-item-side(:class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'")
-                  i(class="iconfont icon-wuxianyangan")
-                q-item-main(sublabel-lines="1" :class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'") {{ item.value === '1' ? '告警' : item.value === '2' ? '告警结束' : '正常' }}
-                q-item-side(right)
-                  q-item-tile {{item.cretime}}
+          q-tabs(v-model="tabsModel" color="white" text-color="black")
+            q-tab(default name="xtab-1" label="告警记录" slot="title")
+            q-tab(name="xtab-2" label="最新记录" slot="title")
+            q-tab-pane(name="xtab-1")
+              q-list(inset-separator class="list-reset")
+                template(v-for="(item, index) in infoData")
+                  q-item(:key="index")
+                    q-item-side(:class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'")
+                      i(class="iconfont icon-wuxianyangan")
+                    q-item-main(sublabel-lines="1" :class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'") {{ item.value === '1' ? '告警' : item.value === '2' ? '告警结束' : '正常' }}
+                    q-item-side(right)
+                      q-item-tile {{item.cretime}}
+            q-tab-pane(name="xtab-2")
+              q-list(inset-separator class="list-reset")
+                template(v-for="(item, index) in upData")
+                  q-item(:key="index")
+                    q-item-side(:class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'")
+                      i(class="iconfont icon-wuxianyangan")
+                    q-item-main(sublabel-lines="1" :class="item.value === '1' ? 'text-deep-orange-13' : 'text-light-green-6'") {{ item.value === '1' ? '告警' : item.value === '2' ? '告警结束' : '正常' }}
+                    q-item-side(right)
+                      q-item-tile {{item.cretime}}
     q-modal(v-model="opened" position="bottom")
       div(:style="checked ? 'padding-bottom: 20px' : 'padding-bottom: 70px'")
         .mapBox
           baidu-map(ref="map" :center="center" :zoom="zoom" @ready="initMap" style="width: 100%; height: 300px;")
-            //- bm-marker(:position="center" animation="BMAP_ANIMATION_BOUNCE" :icon="{url: '../../assets/images/smoke-e.png', size: {width: 30, height: 38}}" :offset="{width: 0, height: -20}")
             .geolocation(@click="locateChange")
               q-icon(name="my_location" color="grey-7")
-            //- bm-marker(:position="center")
-          //- .wave.ripple.danger(style="width: 50px; height: 50px;")
-            .circle
-            .circle
-            .circle
         .current-list
           i(class="iconfont icon-dizhi text-grey-7")
           | {{ checked ? '烟感地址' : '告警地址' }}
           .current-list_right
             | {{address}}
-        //- .current-list
-          | 火警电话
-          .current-list_right
-            |<a href="tel:119" class="testa"><q-icon name="call" class="icon-tel-consult"></q-icon></a>
         .current-list
           i(class="iconfont icon-shijian text-blue-7")
           | {{ checked ? '自检时间' : '告警时间' }}
@@ -95,15 +80,17 @@ import { getInfoList } from '@/api/meter'
 export default {
   data() {
     return {
+      iemi: null,
       checked: true,
       progressBuffer: 74,
       infoData: [],
+      upData: [],
       nowInfo: {},
       opened: false,
       map: null,
       center: {
-        lng: 113.413206,
-        lat: 13.158174
+        lng: 113.412299,
+        lat: 23.158603
       },
       zoom: 19,
       marker: null,
@@ -111,13 +98,20 @@ export default {
       iconUrl: {
         error: require('../../assets/images/smoke-e.png'),
         normal: require('../../assets/images/smoke-n.png')
-      }
+      },
+      tabsModel: 'xtab-2',
+      tabsOptions: [
+        {label: 'Tab 1', value: 'xtab-1'},
+        {label: 'Tab 2', value: 'xtab-2'},
+        {label: 'Tab 3', value: 'xtab-3'}
+      ]
     }
   },
   created() {
+    this.iemi = window.sessionStorage.getItem('imei')
     this.getInfoList()
     this.getInfoError()
-    this.wsMonitor(this.$route.params.imei)
+    this.wsMonitor(this.iemi)
   },
   mounted() {
     document.title = 'NB-IoT · 物联网烟感'
@@ -161,7 +155,7 @@ export default {
     },
     getInfoList() {
       getInfoList({
-        imei: this.$route.params.imei,
+        imei: this.iemi,
         name: 'alarm',
         size: 5
       }).then(res => {
@@ -183,9 +177,9 @@ export default {
     },
     getInfoError() {
       getInfoList({
-        imei: this.$route.params.imei,
+        imei: this.iemi,
         name: 'alarm',
-        size: 5,
+        size: 10,
         value: 1
       }).then(res => {
         let data = res.data
@@ -199,29 +193,48 @@ export default {
           position: 'top-left'
         })
       })
+      getInfoList({
+        imei: this.iemi,
+        name: 'alarm',
+        size: 10
+      }).then(res => {
+        let data = res.data
+        this.upData = []
+        this.upData = data
+        this.$forceUpdate()
+      }).catch(error => {
+        this.$q.notify({
+          message: error.message,
+          type: 'negative',
+          position: 'top-left'
+        })
+      })
     },
     /* eslint-disable */
     initMap({BMap, map}) {
       this.map = map
-      let point = new BMap.Point(this.center.lng, this.center.lat)
+      let point = new BMap.Point(113.413139, 23.158125)
       let iconurl = null
       if (this.checked) {
         iconurl = this.iconUrl.normal
       } else {
         iconurl = this.iconUrl.error
       }
-      // let icon = new BMap.Icon(iconurl, new BMap.Size(30, 38))
-      // let marker = new BMap.Marker(point, { icon: icon })
-      // map.addOverlay(marker)
-      // this.marker = marker
+      let icon = new BMap.Icon(iconurl, new BMap.Size(30, 38))
+      let marker = new BMap.Marker(point, { icon: icon })
+      map.addOverlay(marker)
+      this.marker = marker
 
       let myGeo = new BMap.Geocoder()
       myGeo.getLocation(point, (res) => {
         this.address = res.address
       })
+      this.map.addEventListener('click', (e) => {
+        console.log(e, 'click')
+      })
     },
     locateChange(e) {
-      this.map.centerAndZoom(new BMap.Point(this.center.lng, this.center.lat), 19)
+      this.map.centerAndZoom(new BMap.Point(113.413139, 23.158125), 19)
     }
   }
 }
@@ -229,12 +242,11 @@ export default {
 
 <style lang="less" scoped>
 .col-12 {
-  padding: 0 10px;
+  padding: 10px;
   box-sizing: border-box;
   > div {
     position: relative;
-    margin-top: 10px;
-    background-color: rgba(255, 255, 255, 0.45098039215686275);
+    background-color: #fff;
     border-radius: 5px;
   }
 }
@@ -324,13 +336,14 @@ export default {
 .breathe-btn {
   position: absolute;
   margin: auto 0;
-  top: 0;
-  left: 7%;
+  top: 36px;
+  left: 11%;
   bottom: 0;
-  width: 10px;
-  height: 10px;
+  width: 24px;
+  height: 20px;
   border: 1px solid #21ba45;
-  border-radius: 5px;
+  border-radius: 50%;
+  transform: rotateX(57deg);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   background-image: -webkit-gradient(
@@ -377,7 +390,7 @@ export default {
   100% {
     opacity: 1;
     border: 1px solid #db2828;
-    box-shadow: 0 1px 30px #db2828;
+    box-shadow: 0 1px 60px #f50f0f;
   }
 }
 
@@ -489,10 +502,49 @@ export default {
   transform: rotate(15deg) scale(1.1);
   }
 }
+.aperture {
+  // box-shadow: inset 0 0px 45px #ffc9c9;
+  // animation: aper 2s linear infinite;
+}
+@keyframes aper {
+  0% {
+    box-shadow: inset 0 0px 45px #fff2f2;
+  }
+  50% {
+    box-shadow: inset 0 0px 45px #ffbbbb;
+  }
+  100% {
+    box-shadow: inset 0 0px 45px #fff2f2;
+  }
+}
 </style>
 
 <style lang="less">
 .anchorBL {
   display: none;
+}
+.smoke-tabs {
+  padding: 0 10px !important;
+  .q-tabs-head {
+    min-height: 20px;
+  }
+  .bg-primary {
+    // background: #027be300 !important
+  }
+  .q-tab {
+    padding: 0;
+    min-height: 32px;
+    font-size: 12px;
+    color: #ababab;
+  }
+  .active {
+    color: #000;
+  }
+  .q-tabs-bar {
+    border-color: #fff !important;
+  }
+  .q-tab-pane {
+    padding: 0 12px;
+  }
 }
 </style>

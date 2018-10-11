@@ -89,7 +89,6 @@
           .col-2(class="listBox_content") {{item.id}}
           .col-3(class="listBox_content") {{item.value}}
           .col-7(class="listBox_content") {{item.cretime}}
-      //- q-table(:data="InfoList" :columns="columns" row-key="name" hide-bottom)
     q-btn(class="fixed" style="right: 18px; top: 18px" :loading="loading" round icon="refresh" color="primary" @click="refreshChange")
     q-btn(round color="primary" class="fixed" icon="remove_red_eye" style="right: 18px; bottom: 18px" @click="look = !look")
 </template>
@@ -105,33 +104,8 @@ export default {
   name: 'waterMeter',
   data() {
     return {
-      columns: [
-        {
-          name: 'id',
-          required: true,
-          label: '序号',
-          align: 'left',
-          field: 'id',
-          sortable: false
-        },
-        {
-          name: 'value',
-          required: true,
-          label: '读数',
-          align: 'left',
-          field: 'value',
-          sortable: false
-        },
-        {
-          name: 'cretime',
-          required: true,
-          label: '时间',
-          align: 'left',
-          field: 'cretime',
-          sortable: false
-        }
-      ],
-      look: true,
+      iemi: null,
+      look: false,
       showing: false,
       InfoList: [],
       loading: false,
@@ -197,10 +171,11 @@ export default {
     }
   },
   created() {
+    this.iemi = window.sessionStorage.getItem('imei')
     if (this.$route.params.device !== undefined) this.Wdata = this.$route.params.device
     this.getInfoList()
-    this.wsMonitor(this.$route.params.imei)
-    this.query.imei = this.$route.params.imei
+    this.wsMonitor(this.iemi)
+    this.query.imei = this.iemi
   },
   mounted() {
     document.title = 'NB-IoT · 物联网水表'

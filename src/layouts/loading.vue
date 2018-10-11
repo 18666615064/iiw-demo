@@ -6,7 +6,7 @@
         p
           img(src="~assets/sad.svg" style="width:30vw;max-width:150px;")
         p(class="text-faded")
-          |{{msg}}<strong>(404)</strong>
+          |{{msg}}
 </template>
 
 <script>
@@ -29,6 +29,7 @@ export default {
       getInfoImei(this.$route.params.id).then(res => {
         let data = res.data
         data.imei = this.$route.params.id
+        window.sessionStorage['imei'] = this.$route.params.id
         if (data.id !== undefined && data.id === '-1') {
           this.msg = data.message
           this.loading = false

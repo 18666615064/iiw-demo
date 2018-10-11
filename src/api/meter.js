@@ -8,7 +8,6 @@ export function getInfoImei(url) {
 export function getInfoList(query) {
   return request({
     url: '/sensor/top',
-    // url: '/sensor/top',
     method: 'get',
     params: query
   })
@@ -16,7 +15,13 @@ export function getInfoList(query) {
 export function getMInfoList(query) {
   return request({
     url: '/sensor/last',
-    // url: '/sensor/last',
+    method: 'get',
+    params: query
+  })
+}
+export function getGroupList(query) {
+  return request({
+    url: '/sensor/group',
     method: 'get',
     params: query
   })
