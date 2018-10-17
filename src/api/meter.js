@@ -26,3 +26,10 @@ export function getGroupList(query) {
     params: query
   })
 }
+export function setsave(query) {
+  return request({
+    url: '/sensor/save',
+    method: 'post',
+    data: query
+  })
+}

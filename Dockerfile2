@@ -1,4 +1,10 @@
 FROM nginx:latest
+RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get install npm
+RUN npm install
+RUN npm install quasar-cli --save-dev
+RUN ./node_modules/quasar-cli/bin/quasar build
 RUN rm /usr/share/nginx/html/50x.html
 
 COPY ./dist/spa-mat /usr/share/nginx/html/

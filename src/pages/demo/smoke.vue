@@ -32,7 +32,7 @@
         div
           q-tabs(v-model="tabsModel" color="white" text-color="black")
             q-tab(default name="xtab-1" label="告警记录" slot="title")
-            q-tab(name="xtab-2" label="最新记录" slot="title")
+            q-tab(name="xtab-2" label="自检记录" slot="title")
             q-tab-pane(name="xtab-1")
               q-list(inset-separator class="list-reset")
                 template(v-for="(item, index) in infoData")

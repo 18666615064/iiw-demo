@@ -43,7 +43,7 @@ module.exports = function(ctx) {
     devServer: {
       // https: true,
       open: false
-      // host: '192.168.20.185',
+      // host: '192.168.20.177',
       // port: 8080,
       // open: false, // opens browser window automatically
       // proxy: {
@@ -61,7 +61,7 @@ module.exports = function(ctx) {
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
-      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction', 'QTable', 'QTh', 'QTr', 'QTd', 'QToggle', 'QProgress', 'QModal', 'QKnob', 'QTab', 'QTabPane'],
+      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction', 'QTable', 'QTh', 'QTr', 'QTd', 'QToggle', 'QProgress', 'QModal', 'QKnob', 'QTab', 'QTabPane', 'QDialog', 'QInput'],
       directives: ['Ripple', 'CloseOverlay'],
       // Quasar plugins
       plugins: ['Notify', 'Dialog'],

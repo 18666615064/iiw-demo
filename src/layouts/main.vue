@@ -12,6 +12,7 @@
             q-collapsible(icon="fas fa-edit" label="示例中心" :popup="true" group="item" @show="open('Demo')")
             q-collapsible(icon="fas fa-edit" label="水表" :popup="true" group="item" @show="open('Water')")
             q-collapsible(icon="fas fa-edit" label="烟感" :popup="true" group="item" @show="open('Smoke')")
+            q-collapsible(icon="fas fa-edit" label="路灯" :popup="true" group="item" @show="open('Lamp')")
             q-collapsible(icon="fas fa-edit" label="NB-IoT 信号探测仪" :popup="true" group="item" @show="open('Detection')")
             q-collapsible(icon="fas fa-list" label="支持设备" :popup="true" group="item")
               q-list(hightlight inset-separator no-border)
@@ -64,7 +65,7 @@ export default {
           this.$router.push({ path: '/code' })
           break
         case 'Demo':
-          this.$router.push({ path: '/smoke' })
+          this.$router.push({ path: '/lamp' })
           break
         case 'Water':
           this.$router.push({ path: '/loading/869664030006491' })
@@ -75,6 +76,9 @@ export default {
         case 'Detection':
           // this.$router.push({ path: '/detection' })
           this.$router.push({ path: '/loading/868194030006524' })
+          break
+        case 'Lamp':
+          this.$router.push({ path: '/loading/868194030004271' })
           break
         default:
           break

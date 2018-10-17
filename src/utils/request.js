@@ -4,12 +4,12 @@ import axios from 'axios'
 import qs from 'qs'
 // create an axios instance
 const service = axios.create({
-  // baseURL: '/server', // api的base_url
   baseURL: '/admin/devicecenter',
   timeout: 5000,
   withCredentials: false,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    // 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    'Content-Type': 'application/json;charset=utf-8'
   }
 })
 // request interceptor
@@ -20,7 +20,10 @@ service.interceptors.request.use(config => {
   // }
   if (config.method === 'post' || config.method === 'put' || config.method === 'delete') {
     // 序列化
-    config.data = qs.stringify(config.data)
+    console.log(config.data)
+    console.log(qs.stringify(config.data), 'qs.stringify(config.data)')
+    // config.data = qs.stringify(config.data)
+    // config.data = JSON.stringify(config.data)
   }
   return config
 }, error => {

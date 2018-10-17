@@ -26,43 +26,50 @@ export default {
   },
   methods: {
     getInfoImei() {
-      getInfoImei(this.$route.params.id).then(res => {
-        let data = res.data
-        data.imei = this.$route.params.id
-        window.sessionStorage['imei'] = this.$route.params.id
-        if (data.id !== undefined && data.id === '-1') {
-          this.msg = data.message
-          this.loading = false
-        } else {
-          switch (data.product.name) {
-            case 'NB-Water':
-              this.$router.push({ name: 'waterMeter', params: data })
-              break
-            case 'NB-Smoke':
-              this.$router.push({ name: 'smoke', params: data })
-              break
-            case 'NB-Detector':
-              this.$router.push({ name: 'detection', params: data })
-              break
-            default:
-              this.msg = '找不到改设备'
-              this.loading = false
-              break
+      getInfoImei(this.$route.params.id)
+        .then(res => {
+          let data = res.data
+          data.imei = this.$route.params.id
+          window.sessionStorage['imei'] = this.$route.params.id
+          window.sessionStorage['id'] = data.device.id
+          if (data.id !== undefined && data.id === '-1') {
+            this.msg = data.message
+            this.loading = false
+          } else {
+            switch (data.product.name) {
+              case 'NB-Water':
+                this.$router.push({ name: 'waterMeter', params: data })
+                break
+              case 'NB-Smoke':
+                this.$router.push({ name: 'smoke', params: data })
+                break
+              case 'NB-Detector':
+                this.$router.push({ name: 'detection', params: data })
+                break
+              case 'NB-Lamp3.0':
+              case 'NB-Lamp':
+                this.$router.push({ name: 'lamp', params: data })
+                break
+              default:
+                this.msg = '找不到该设备'
+                this.loading = false
+                break
+            }
           }
-        }
-      }).catch(error => {
-        this.loading = false
-        this.msg = error.message
-      })
+        })
+        .catch(error => {
+          this.loading = false
+          this.msg = error.message
+        })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .loadingBox {
-    height: 100vh;
-    text-align: center;
-    line-height: 100vh
-  }
+.loadingBox {
+  height: 100vh;
+  text-align: center;
+  line-height: 100vh;
+}
 </style>

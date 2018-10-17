@@ -48,6 +48,11 @@ const routes = [{
   name: 'detection',
   component: () =>
     import('pages/demo/detection.vue')
+}, {
+  path: '/lamp',
+  name: 'lamp',
+  component: () =>
+    import('pages/demo/lamp.vue')
 }]
 // Always leave this as last one
 if (process.env.MODE !== 'ssr') {

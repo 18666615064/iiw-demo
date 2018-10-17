@@ -14,12 +14,12 @@ export default {
     }
   },
   methods: {
-    hide() {
+    show() {
       this.check = true
       let body = document.body
       body.style.cssText = 'overflow: hidden'
     },
-    show() {
+    hide() {
       this.check = false
       let body = document.body
       body.style.cssText = ''
