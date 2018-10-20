@@ -61,7 +61,7 @@ module.exports = function(ctx) {
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
-      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction', 'QTable', 'QTh', 'QTr', 'QTd', 'QToggle', 'QProgress', 'QModal', 'QKnob', 'QTab', 'QTabPane', 'QDialog', 'QInput'],
+      components: ['QLayout', 'QLayoutHeader', 'QLayoutDrawer', 'QPageContainer', 'QPage', 'QPageSticky', 'QToolbar', 'QTabs', 'QRouteTab', 'QLayoutFooter', 'QScrollArea', 'QToolbarTitle', 'QBtn', 'QIcon', 'QList', 'QListHeader', 'QItem', 'QItemMain', 'QItemSide', 'QCollapsible', 'QCheckbox', 'QWindowResizeObservable', 'QResizeObservable', 'QBtnGroup', 'QCard', 'QCardTitle', 'QCardMain', 'QCardMedia', 'QCardSeparator', 'QCardActions', 'QItemTile', 'QSpinner', 'QSpinnerGears', 'QSpinnerPie', 'QFab', 'QFabAction', 'QTable', 'QTh', 'QTr', 'QTd', 'QToggle', 'QProgress', 'QModal', 'QKnob', 'QTab', 'QTabPane', 'QDialog', 'QInput', 'QDatetime', 'QRadio'],
       directives: ['Ripple', 'CloseOverlay'],
       // Quasar plugins
       plugins: ['Notify', 'Dialog'],

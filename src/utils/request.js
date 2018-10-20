@@ -1,11 +1,12 @@
 import axios from 'axios'
 // import { Message } from 'element-ui'
 // import { getToken } from '@/utils/auth'
-import qs from 'qs'
+// import qs from 'qs'
 // create an axios instance
 const service = axios.create({
+  // baseURL: '/server', // api的base_url
   baseURL: '/admin/devicecenter',
-  timeout: 5000,
+  timeout: 40000,
   withCredentials: false,
   headers: {
     // 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
@@ -20,10 +21,7 @@ service.interceptors.request.use(config => {
   // }
   if (config.method === 'post' || config.method === 'put' || config.method === 'delete') {
     // 序列化
-    console.log(config.data)
-    console.log(qs.stringify(config.data), 'qs.stringify(config.data)')
     // config.data = qs.stringify(config.data)
-    // config.data = JSON.stringify(config.data)
   }
   return config
 }, error => {

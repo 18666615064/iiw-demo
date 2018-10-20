@@ -2,12 +2,13 @@
   .mask(:class="check ? 'action' : ''")
     .content
       q-spinner-gears(color="light-blue-5" :size="100")
-      p 数据更新中
+      p {{title}}
 </template>
 
 <script>
 export default {
   name: 'loading',
+  props: ['title'],
   data() {
     return {
       check: false

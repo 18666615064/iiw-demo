@@ -78,7 +78,8 @@ export default {
           this.$router.push({ path: '/loading/868194030006524' })
           break
         case 'Lamp':
-          this.$router.push({ path: '/loading/868194030004271' })
+          // this.$router.push({ path: '/loading/868194030004271' })
+          this.$router.push({ path: '/loading/868194030005799' }) // 开发版
           break
         default:
           break

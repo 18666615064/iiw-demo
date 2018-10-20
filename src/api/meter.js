@@ -33,3 +33,17 @@ export function setsave(query) {
     data: query
   })
 }
+export function sendsync(query) {
+  return request({
+    url: '/device/sendsync',
+    method: 'put',
+    data: query
+  })
+}
+export function readsync(query) {
+  return request({
+    url: '/device/readsync',
+    method: 'put',
+    data: query
+  })
+}

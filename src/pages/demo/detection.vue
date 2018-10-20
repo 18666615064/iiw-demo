@@ -173,7 +173,7 @@
           div
             .canvas-title 最近{{tableData.length}}次平均时长
             canvas(id="columnar" height="200" style="width: 100%")
-    Loading(ref="loading")
+    Loading(ref="loading" :title="loadingTitle")
 </template>
 
 <script>
@@ -189,6 +189,7 @@ export default {
   name: 'detection',
   data() {
     return {
+      loadingTitle: '数据更新中',
       mostLoading: null,
       timeOut: false,
       model: false,
@@ -313,6 +314,14 @@ export default {
       }
     },
     setsave(name) {
+      if (this.current.point === '' && this.current.address === '') {
+        this.$q.notify({
+          message: '信息不齐全',
+          type: 'info',
+          position: 'top-left'
+        })
+        return
+      }
       setsave({
         devicefk: this.current.devicefk,
         props: [{
@@ -410,7 +419,6 @@ export default {
       this.getGroupList()
     },
     initData(data) {
-      console.log(data)
       this.address = data.address
       this.cretime = data.time
       this.endValRX = data.rxlev
